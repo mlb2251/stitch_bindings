@@ -42,6 +42,7 @@ use serde_json::{json,Value};
     utility_by_rewrite= "false",
     dreamcoder_comparison= "false",
 )]
+#[allow(clippy::too_many_arguments)]
 fn compression(
     py: Python,
     programs: Vec<String>,
