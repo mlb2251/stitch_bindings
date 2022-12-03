@@ -3,7 +3,6 @@
 use stitch_core::*;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
-use serde_json::{json,Value};
 use clap::Parser;
 
 
@@ -16,13 +15,11 @@ use clap::Parser;
 /// You can parse this string with `import json; json.loads(output)`.
 #[pyfunction(
     programs,
-    iterations,
     args,
 )]
 fn compression(
     py: Python,
     programs: Vec<String>,
-    iterations: usize,
     args: String,
 ) -> String {
 
@@ -48,8 +45,6 @@ fn compression(
 /// A Python module implemented in Rust.
 #[pymodule]
 fn stitch(_py: Python, m: &PyModule) -> PyResult<()> {
-    // m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
-    // m.add_function(wrap_pyfunction!(soot, m)?)?;
     m.add_function(wrap_pyfunction!(compression, m)?)?;
     Ok(())
 }
