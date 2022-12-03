@@ -1,25 +1,26 @@
 # Stitch Bindings
 
 
-## Building the bindings with the latest version of `stitch`
+## Using a specific version of `stitch`
 
 By default, the following instructions will build the latest version of stitch on the `main` branch of the [stitch repo](https://github.com/mlb2251/stitch). To build the bindings for a specific commit, replace the following line in `Cargo.toml`:
-```
+```toml
 stitch_core = { git = "https://github.com/mlb2251/stitch", branch = "main"}
 ```
-with the following:
-```
+with the following (replacing the SHA with the desired commit SHA):
+
+```toml
 stitch_core = { git = "https://github.com/mlb2251/stitch", rev = "058890ecc3c3137c5105d673979304edfb0ab333"}
 ```
 
-Build the bindings with:
-```
+## Building the bindings
+```bash
 PYO3_PYTHON=python3.8 make osx
 ```
 
-Adjusting the `PYO3_PYTHON` variable to be whichever python interpreter you would like to compile for.
+`make linux` is also supported. Adjust the `PYO3_PYTHON` variable to be whichever python interpreter you would like to compile for. It will default to `python3` if you don't set it.
 
-To use the bindings do the following
+To use the bindings, open a new python interpreter and run the following:
 
 ```python
 import sys, os, json
