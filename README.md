@@ -28,7 +28,7 @@ To use the bindings, open a new python interpreter and run the following:
 import sys, os, json
 
 # First add the bindings to your PYTHONPATH - you can do this by adding `export PYTHONPATH="$PYTHONPATH:path/to/stitch_bindings/bindings/"`
-# to you `~/.bashrc`, `~/.zshrc`, and/or `~/.bash_profile`, or just for the current session through sys.path.append() as below:
+# to your `~/.bashrc`, `~/.zshrc`, and/or `~/.bash_profile`, or just for the current session through sys.path.append() as below:
 sys.path.append(os.getcwd() + '/bindings')
 
 # Now the following import should succeed
@@ -52,5 +52,5 @@ If `import stitch` fails, create an issue on GitHub including your python versio
 Sometimes changing to a different `PYO3_PYTHON` can be helpful as well.
 
 ## Adding to PYTHONPATH
-First add the bindings to your PYTHONPATH - you can do this by adding `export PYTHONPATH="$PYTHONPATH:path/to/stitch_bindings/bindings/"`
-to you `~/.bashrc`, `~/.zshrc`, and/or `~/.bash_profile`.
+You can add the bindings to your PYTHONPATH by adding `export PYTHONPATH="$PYTHONPATH:path/to/stitch_bindings/bindings/"`
+to your `~/.bashrc`, `~/.zshrc`, and/or `~/.bash_profile`.
