@@ -1,5 +1,7 @@
 # Stitch Bindings
 
+**Dec 6: Bindings are being renovated for useability and will be available within a week!**
+
 This repo provides Python bindings to [stitch](https://github.com/mlb2251/stitch). At some point, stitch bindings will be published to pip, but in the mean time the instructions below allow for building the latest version of stitch from the GitHub repo (or any desired branch/commit). The goal for the stitch interface is to be nearly identical to running stitch in the commandline with `cargo run --release --bin=compress`, by exposing the function `stitch.compression(programs,args)` where `programs` is a list of programs (as strings) and `args` is a string containing commandline arguments, like `"--max-arity=3 --iterations=3"`.
 
 
