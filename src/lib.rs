@@ -17,51 +17,23 @@ use clap::Parser;
 /// You can parse this string with `import json; json.loads(output)`.
 #[pyfunction(
     programs,
-    iterations,
-    max_arity = "2",
-    threads = "1",
-    rewritten_intermediates = "false",
-    rewritten_dreamcoder = "false",
-    silent = "true",
-    kwargs="**"
+    args
 )]
 #[pyo3(text_signature = "(a, b, /)")]
-// #[allow(clippy::too_many_arguments)]
 fn compress_backend(
     py: Python,
     programs: Vec<String>,
-    iterations: usize,
-    max_arity: usize,
-    threads: usize,
-    rewritten_intermediates: bool,
-    rewritten_dreamcoder: bool,
-    silent: bool,
-    kwargs: Option<HashMap<String,String>>,
+    args: String,
 ) -> String {
 
-
-    let kwargs: Vec<String> = kwargs.map(|d| d.iter().map(|(k,v)| arg(k,v)).collect()).unwrap_or_default();
-
-    let args: String = vec![
-        String::from("compress"),
-        arg("iterations", iterations),
-        arg("max-arity", max_arity),
-        arg("threads", threads),
-        arg("rewritten-intermediates", rewritten_intermediates),
-        arg("rewritten-dreamcoder", rewritten_dreamcoder),
-        arg("silent", silent),
-        kwargs.join(" "),
-    ].join(" ");
-
-
-    let cfg = match MultistepCompressionConfig::try_parse_from(args.split_whitespace()) {
+    let cfg = match MultistepCompressionConfig::try_parse_from(format!("compress {args}").split_whitespace()) {
         Ok(cfg) => cfg,
         Err(e) => panic!("Error parsing arguments: {}", e),
     };
 
     let input = Input {
         train_programs: programs,
-        test_programs: None,
+        test_programs: test_programs,
         tasks: None,
         prev_dc_inv_to_inv_strs: Vec::new(),
     };
@@ -70,7 +42,6 @@ fn compress_backend(
     let (_step_results, json_res) = py.allow_threads(||
         multistep_compression(&input, &cfg)
     );
-
 
     // return as something you could json.loads(out) from in python
     json_res.to_string()
@@ -81,20 +52,4 @@ fn compress_backend(
 fn stitch(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(compress_backend, m)?)?;
     Ok(())
-}
-
-
-
-fn arg(name: &str, val: impl Display) -> String {
-    let mut s = String::from("--");
-    s += &name.replace("_", "-");
-    let val = val.to_string();
-    if val == "true" {
-        return s;
-    }
-    if val == "false" {
-        return String::new();
-    }
-    s += &format!("={val}");
-    s
 }
