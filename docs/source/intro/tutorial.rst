@@ -1,7 +1,9 @@
+.. _intro-tutorial:
+
 Tutorial
 ========
 
-We will assume you have already installed ``stitch_core``. If not, first see :doc:`intro/install`.
+We will assume you have already installed ``stitch_core``. If not, first see :ref:`intro-install`.
 
 Lets do some basic abstraction learning. Here we'll two programs ``(a a a)`` and ``(b b b)`` and abstract out the common structure as a function ``λx. x x x``
 
