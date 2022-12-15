@@ -1,0 +1,514 @@
+{
+  "cmd": "/Users/matthewbowers/proj/rust/stitch/target/release/deps/integration_tests-38d27ecd504c7478",
+  "args": {
+    "iterations": 10,
+    "abstraction_prefix": "fn_",
+    "previous_abstractions": 3,
+    "shuffle": false,
+    "truncate": null,
+    "no_opt": false,
+    "silent": false,
+    "step": {
+      "max_arity": 3,
+      "threads": 1,
+      "no_stats": false,
+      "batch": 1,
+      "dynamic_batch": false,
+      "inv_candidates": 1,
+      "hole_choice": "DepthFirst",
+      "cost": "Dreamcoder",
+      "cost_lam": null,
+      "cost_app": null,
+      "cost_var": null,
+      "cost_ivar": null,
+      "cost_prim_default": null,
+      "no_mismatch_check": false,
+      "no_top_lambda": false,
+      "follow": null,
+      "follow_prune": false,
+      "verbose_worklist": false,
+      "verbose_best": false,
+      "print_stats": 0,
+      "show_rewritten": false,
+      "rewritten_dreamcoder": false,
+      "rewritten_intermediates": false,
+      "inv_arg_cap": false,
+      "no_opt_single_use": false,
+      "allow_single_task": false,
+      "no_opt_upper_bound": false,
+      "no_opt_force_multiuse": false,
+      "no_opt_useless_abstract": false,
+      "no_opt_arity_zero": false,
+      "no_other_util": false,
+      "rewrite_check": true,
+      "utility_by_rewrite": false,
+      "dreamcoder_comparison": false,
+      "quiet": false
+    }
+  },
+  "original_cost": 13267,
+  "final_cost": 5852,
+  "compression_ratio": 2.267088174982912,
+  "num_abstractions": 10,
+  "original": [
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $1 1))) 0))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (+ 1 $1))) 0))",
+    "(lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ $1 1))) 1))",
+    "(lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ 1 $1))) 1))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ ($3 (cdr $2)) 1))) 0)))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $1 1))) 0))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ 1 $1))) 0))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ $1 1))) 1))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ 1 $1))) 1))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (- 0 (dreamcoder_abstraction_0 $0 (lam (lam (- $1 1))) 0)))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (eq? $0 0) $1 (cons $0 $1)))) empty))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (eq? 0 $0) $1 (cons $0 $1)))) empty))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 0) (cons $0 $1) $1))) empty))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? 1 $0) $1 (cons $0 $1)))) empty))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (if (eq? $0 0) $1 (cons $0 ($3 $1))))) empty)))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 1) $1 (cons $0 $1)))) empty))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 1) $1 (cons $0 $1)))) (dreamcoder_abstraction_2 empty (lam $0))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? (+ 1 1) $0) (cons $0 $1) $1))) empty))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 1) $1 (cons $0 ($3 $1))))) empty)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 1) ($3 $1) (cons $0 $1)))) empty)))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (- $0 1)) (lam (+ 1 $0)) (lam (eq? 0 $0))))",
+    "(lam (dreamcoder_abstraction_1 (+ $0 1) (lam (- $0 1)) (lam $0) (lam (eq? $0 1))))",
+    "(lam (dreamcoder_abstraction_1 (+ $0 1) (lam (- $0 1)) (lam $0) (lam (eq? 1 $0))))",
+    "(lam (dreamcoder_abstraction_1 (+ 1 $0) (lam (- $0 1)) (lam $0) (lam (eq? $0 1))))",
+    "(lam (dreamcoder_abstraction_1 (+ 1 $0) (lam (- $0 1)) (lam $0) (lam (eq? 1 $0))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (+ $0 1)) (lam (- 0 $0)) (lam (eq? 0 $0))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (+ 1 $0)) (lam (- 0 $0)) (lam (eq? $0 0))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (+ 1 $0)) (lam (- 0 $0)) (lam (eq? 0 $0))))",
+    "(lam (dreamcoder_abstraction_1 (- 0 $0) (lam (- $0 1)) (lam $0) (lam (eq? $0 0))))",
+    "(lam (dreamcoder_abstraction_1 (- 0 $0) (lam (- $0 1)) (lam $0) (lam (eq? 0 $0))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (cdr (cdr $0))) (lam (car $0)) (lam (empty? $0))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 ($3 (cdr (cdr $2)))))) empty)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 ($3 (cdr (cdr $2)))))) $0)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (cons (car $2) ($3 (cdr (cdr $2)))))) empty)))))",
+    "(lam (fix1 $0 (lam (lam (if (empty? $0) empty (cons (car $0) ($1 (cdr (cdr $0)))))))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (cdr $0)) (lam (car $0)) (lam (empty? (cdr $0)))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (dreamcoder_abstraction_2 (cdr $0) (lam $0))) (lam (car $0)) (lam (empty? (cdr $0)))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (cdr (dreamcoder_abstraction_2 $0 (lam $0)))) (lam (car $0)) (lam (empty? (cdr $0)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (cons (car $2) ($3 (cdr $2))))) empty)))))",
+    "(lam (fix1 $0 (lam (lam (if (empty? (cdr $0)) empty (cons (car $0) ($1 (cdr $0))))))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ $0 1)) (lam $0) (lam (eq? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ $0 1)) (lam $0) (lam (eq? $1 $0))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ 1 $0)) (lam $0) (lam (eq? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ 1 $0)) (lam $0) (lam (eq? $1 $0))))",
+    "(lam (dreamcoder_abstraction_1 (- $0 $0) (lam (+ $0 1)) (lam $0) (lam (eq? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ $0 1)) (lam $0) (lam (gt? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ 1 $0)) (lam $0) (lam (gt? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 (- $0 $0) (lam (+ $0 1)) (lam $0) (lam (gt? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 (- $0 $0) (lam (+ 1 $0)) (lam $0) (lam (gt? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ $0 1)) (lam $0) (lam (eq? $0 (+ $1 1)))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 (cons $0 $1)))) empty))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 (cons $0 $1)))) (dreamcoder_abstraction_2 empty (lam $0))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 (cons $0 $1)))) (dreamcoder_abstraction_2 empty (lam 0))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 (cons $0 $1)))) (dreamcoder_abstraction_2 empty (lam 1))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 (cons $0 (dreamcoder_abstraction_2 $1 (lam $0)))))) empty))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $0 $1))) 0))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $1 $0))) 0))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (- $0 (- 0 $1)))) 0))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $0 ($3 (cdr $2))))) 0)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ ($3 (cdr $2)) $0))) 0)))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons 0 empty)))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons (- 1 1) empty)))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons 0 (dreamcoder_abstraction_2 empty (lam $0)))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons 0 (dreamcoder_abstraction_2 empty (lam 0)))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons 0 (dreamcoder_abstraction_2 empty (lam 1)))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (+ $0 $0))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (- $0 (- 0 $0)))))",
+    "(lam (dreamcoder_abstraction_2 (dreamcoder_abstraction_2 $0 (lam (+ $0 $0))) (lam $0)))",
+    "(lam (dreamcoder_abstraction_2 (dreamcoder_abstraction_2 $0 (lam $0)) (lam (+ $0 $0))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (+ $0 (dreamcoder_abstraction_0 empty (lam (lam 0)) $0)))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (+ $0 1))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (+ 1 $0))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (- $0 (- 0 1)))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (- 1 (- 0 $0)))))",
+    "(lam (dreamcoder_abstraction_2 (dreamcoder_abstraction_2 $0 (lam (+ 1 $0))) (lam $0)))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (- 0 $0))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (- $0 (+ $0 $0)))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (- (- $0 $0) $0))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (- 1 (+ $0 1)))))",
+    "(lam (dreamcoder_abstraction_2 $0 (lam (- 1 (+ 1 $0)))))"
+  ],
+  "rewritten": [
+    "fn_5",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (+ 1 $1))) 0))",
+    "(lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ $1 1))) 1))",
+    "(lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ 1 $1))) 1))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ ($3 (cdr $2)) 1))) 0)))))",
+    "(fn_7 fn_5)",
+    "(fn_7 (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ 1 $1))) 0)))",
+    "(fn_7 (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ $1 1))) 1)))",
+    "(fn_7 (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ 1 $1))) 1)))",
+    "(fn_7 (lam (- 0 (dreamcoder_abstraction_0 $0 (lam (lam (- $1 1))) 0))))",
+    "(fn_4 0 eq?)",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (eq? 0 $0) $1 (cons $0 $1)))) empty))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 0) (cons $0 $1) $1))) empty))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? 1 $0) $1 (cons $0 $1)))) empty))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (if (eq? $0 0) $1 (cons $0 ($3 $1))))) empty)))))",
+    "(fn_4 1 gt?)",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 1) $1 (cons $0 $1)))) (dreamcoder_abstraction_2 empty (lam $0))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? (+ 1 1) $0) (cons $0 $1) $1))) empty))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 1) $1 (cons $0 ($3 $1))))) empty)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 1) ($3 $1) (cons $0 $1)))) empty)))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (- $0 1)) (lam (+ 1 $0)) (lam (eq? 0 $0))))",
+    "(lam (fn_3 1 - (+ $0 1)))",
+    "(lam (dreamcoder_abstraction_1 (+ $0 1) (lam (- $0 1)) (lam $0) (lam (eq? 1 $0))))",
+    "(fn_6 1 +)",
+    "(lam (dreamcoder_abstraction_1 (+ 1 $0) (lam (- $0 1)) (lam $0) (lam (eq? 1 $0))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (+ $0 1)) (lam (- 0 $0)) (lam (eq? 0 $0))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (+ 1 $0)) (lam (- 0 $0)) (lam (eq? $0 0))))",
+    "(lam (dreamcoder_abstraction_1 $0 (lam (+ 1 $0)) (lam (- 0 $0)) (lam (eq? 0 $0))))",
+    "(fn_6 0 -)",
+    "(lam (dreamcoder_abstraction_1 (- 0 $0) (lam (- $0 1)) (lam $0) (lam (eq? 0 $0))))",
+    "(fn_9 (lam (empty? $0)) (lam (cdr (cdr $0))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 ($3 (cdr (cdr $2)))))) empty)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 ($3 (cdr (cdr $2)))))) $0)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (cons (car $2) ($3 (cdr (cdr $2)))))) empty)))))",
+    "(lam (fix1 $0 (lam (lam (if (empty? $0) empty (cons (car $0) ($1 (cdr (cdr $0)))))))))",
+    "(fn_9 (lam (empty? (cdr $0))) (lam (cdr $0)))",
+    "(fn_9 (lam (empty? (cdr $0))) (lam (dreamcoder_abstraction_2 (cdr $0) (lam $0))))",
+    "(fn_9 (lam (empty? (cdr $0))) (lam (cdr (dreamcoder_abstraction_2 $0 (lam $0)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (cons (car $2) ($3 (cdr $2))))) empty)))))",
+    "(lam (fix1 $0 (lam (lam (if (empty? (cdr $0)) empty (cons (car $0) ($1 (cdr $0))))))))",
+    "(lam (fn_10 $0))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ $0 1)) (lam $0) (lam (eq? $1 $0))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ 1 $0)) (lam $0) (lam (eq? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ 1 $0)) (lam $0) (lam (eq? $1 $0))))",
+    "(lam (fn_3 $0 + (- $0 $0)))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ $0 1)) (lam $0) (lam (gt? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 0 (lam (+ 1 $0)) (lam $0) (lam (gt? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 (- $0 $0) (lam (+ $0 1)) (lam $0) (lam (gt? $0 $1))))",
+    "(lam (dreamcoder_abstraction_1 (- $0 $0) (lam (+ 1 $0)) (lam $0) (lam (gt? $0 $1))))",
+    "(lam (fn_10 (+ $0 1)))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (fn_11 $1 (cons $0)))) empty))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (fn_11 $1 (cons $0)))) (dreamcoder_abstraction_2 empty (lam $0))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (fn_11 $1 (cons $0)))) (dreamcoder_abstraction_2 empty (lam 0))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (fn_11 $1 (cons $0)))) (dreamcoder_abstraction_2 empty (lam 1))))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (fn_11 (dreamcoder_abstraction_2 $1 (lam $0)) (cons $0)))) empty))",
+    "(fn_8 0 +)",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $1 $0))) 0))",
+    "(lam (dreamcoder_abstraction_0 $0 (lam (lam (- $0 (- 0 $1)))) 0))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $0 ($3 (cdr $2))))) 0)))))",
+    "(lam (fix1 $0 (lam (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ ($3 (cdr $2)) $0))) 0)))))",
+    "(fn_8 (cons 0 empty) cons)",
+    "(fn_8 (cons (- 1 1) empty) cons)",
+    "(fn_8 (cons 0 (dreamcoder_abstraction_2 empty (lam $0))) cons)",
+    "(fn_8 (cons 0 (dreamcoder_abstraction_2 empty (lam 0))) cons)",
+    "(fn_8 (cons 0 (dreamcoder_abstraction_2 empty (lam 1))) cons)",
+    "(fn_7 (lam (+ $0 $0)))",
+    "(fn_7 (lam (- $0 (- 0 $0))))",
+    "(lam (dreamcoder_abstraction_2 (dreamcoder_abstraction_2 $0 (lam (+ $0 $0))) (lam $0)))",
+    "(lam (dreamcoder_abstraction_2 (dreamcoder_abstraction_2 $0 (lam $0)) (lam (+ $0 $0))))",
+    "(fn_7 (lam (+ $0 (dreamcoder_abstraction_0 empty (lam (lam 0)) $0))))",
+    "(fn_7 (lam (+ $0 1)))",
+    "(fn_12 (+ 1))",
+    "(fn_7 (lam (- $0 (- 0 1))))",
+    "(fn_7 (lam (- 1 (- 0 $0))))",
+    "(lam (dreamcoder_abstraction_2 (dreamcoder_abstraction_2 $0 (lam (+ 1 $0))) (lam $0)))",
+    "(fn_12 (- 0))",
+    "(fn_7 (lam (- $0 (+ $0 $0))))",
+    "(fn_7 (lam (- (- $0 $0) $0)))",
+    "(fn_7 (lam (- 1 (+ $0 1))))",
+    "(fn_7 (lam (- 1 (+ 1 $0))))"
+  ],
+  "rewritten_dreamcoder": null,
+  "abstractions": [
+    {
+      "body": "(dreamcoder_abstraction_1 #2 (lam (#1 $0 1)) (lam $0) (lam (eq? $0 #0)))",
+      "dreamcoder": "#(lambda (lambda (lambda (#(lambda (lambda (lambda (lambda (fix1 $3 (lambda (lambda (if ($2 $0) empty (cons ($3 $0) ($1 ($4 $0))))))))))) $0 (lambda ($2 $0 1)) (lambda $0) (lambda (eq? $0 $3))))))",
+      "arity": 3,
+      "name": "fn_3",
+      "utility": 1219,
+      "final_cost": 11437,
+      "compression_ratio": 1.1600069948413045,
+      "cumulative_compression_ratio": 1.1600069948413045,
+      "num_uses": 6,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_3 1 - (+ $0 1)": "(dreamcoder_abstraction_1 (+ $0 1) (lam (- $0 1)) (lam $0) (lam (eq? $0 1)))"
+        },
+        {
+          "fn_3 1 - (+ 1 $0)": "(dreamcoder_abstraction_1 (+ 1 $0) (lam (- $0 1)) (lam $0) (lam (eq? $0 1)))"
+        },
+        {
+          "fn_3 $0 + (- $0 $0)": "(dreamcoder_abstraction_1 (- $0 $0) (lam (+ $0 1)) (lam $0) (lam (eq? $0 $1)))"
+        },
+        {
+          "fn_3 0 - (- 0 $0)": "(dreamcoder_abstraction_1 (- 0 $0) (lam (- $0 1)) (lam $0) (lam (eq? $0 0)))"
+        },
+        {
+          "fn_3 $0 + 0": "(dreamcoder_abstraction_1 0 (lam (+ $0 1)) (lam $0) (lam (eq? $0 $1)))"
+        },
+        {
+          "fn_3 (+ $0 1) + 0": "(dreamcoder_abstraction_1 0 (lam (+ $0 1)) (lam $0) (lam (eq? $0 (+ $1 1))))"
+        }
+      ]
+    },
+    {
+      "body": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (#1 $0 #0) $1 (cons $0 $1)))) empty))",
+      "dreamcoder": "#(lambda (lambda (lambda (#(lambda (lambda (lambda (fix1 $2 (lambda (lambda (if (empty? $0) $2 ($3 ($1 (cdr $0)) (car $0))))))))) $0 (lambda (lambda (if ($3 $0 $4) $1 (cons $0 $1)))) empty))))",
+      "arity": 2,
+      "name": "fn_4",
+      "utility": 709,
+      "final_cost": 9815,
+      "compression_ratio": 1.1652572592969943,
+      "cumulative_compression_ratio": 1.3517065715741212,
+      "num_uses": 2,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_4 0 eq?": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (eq? $0 0) $1 (cons $0 $1)))) empty))"
+        },
+        {
+          "fn_4 1 gt?": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (if (gt? $0 1) $1 (cons $0 $1)))) empty))"
+        }
+      ]
+    },
+    {
+      "body": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $1 1))) 0))",
+      "dreamcoder": "#(lambda (#(lambda (lambda (lambda (fix1 $2 (lambda (lambda (if (empty? $0) $2 ($3 ($1 (cdr $0)) (car $0))))))))) $0 (lambda (lambda (+ $1 1))) 0))",
+      "arity": 0,
+      "name": "fn_5",
+      "utility": 408,
+      "final_cost": 8799,
+      "compression_ratio": 1.1154676667803158,
+      "cumulative_compression_ratio": 1.5077849755654051,
+      "num_uses": 2,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_5 ": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $1 1))) 0))"
+        }
+      ]
+    },
+    {
+      "body": "(lam (fn_3 #0 - (#1 #0 $0)))",
+      "dreamcoder": "#(lambda (lambda (lambda (#(lambda (lambda (lambda (#(lambda (lambda (lambda (lambda (fix1 $3 (lambda (lambda (if ($2 $0) empty (cons ($3 $0) ($1 ($4 $0))))))))))) $0 (lambda ($2 $0 1)) (lambda $0) (lambda (eq? $0 $3)))))) $2 - ($1 $2 $0)))))",
+      "arity": 2,
+      "name": "fn_6",
+      "utility": 302,
+      "final_cost": 8191,
+      "compression_ratio": 1.0742278110120864,
+      "cumulative_compression_ratio": 1.6197045537785375,
+      "num_uses": 2,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_6 0 -": "(lam (fn_3 0 - (- 0 $0)))"
+        },
+        {
+          "fn_6 1 +": "(lam (fn_3 1 - (+ 1 $0)))"
+        }
+      ]
+    },
+    {
+      "body": "(lam (dreamcoder_abstraction_2 $0 #0))",
+      "dreamcoder": "#(lambda (lambda (#(lambda (lambda (#(lambda (lambda (lambda (fix1 $2 (lambda (lambda (if (empty? $0) $2 ($3 ($1 (cdr $0)) (car $0))))))))) $1 (lambda (lambda (cons ($2 $0) $1))) empty))) $0 $1)))",
+      "arity": 1,
+      "name": "fn_7",
+      "utility": 205,
+      "final_cost": 7783,
+      "compression_ratio": 1.0524219452653218,
+      "cumulative_compression_ratio": 1.7046126172427085,
+      "num_uses": 17,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_7 (lam (+ $0 $0))": "(lam (dreamcoder_abstraction_2 $0 (lam (+ $0 $0))))"
+        },
+        {
+          "fn_7 (lam (+ $0 (dreamcoder_abstraction_0 empty (lam (lam 0)) $0)))": "(lam (dreamcoder_abstraction_2 $0 (lam (+ $0 (dreamcoder_abstraction_0 empty (lam (lam 0)) $0)))))"
+        },
+        {
+          "fn_7 (lam (+ $0 1))": "(lam (dreamcoder_abstraction_2 $0 (lam (+ $0 1))))"
+        },
+        {
+          "fn_7 (lam (+ 1 $0))": "(lam (dreamcoder_abstraction_2 $0 (lam (+ 1 $0))))"
+        },
+        {
+          "fn_7 (lam (- $0 (+ $0 $0)))": "(lam (dreamcoder_abstraction_2 $0 (lam (- $0 (+ $0 $0)))))"
+        },
+        {
+          "fn_7 (lam (- $0 (- 0 $0)))": "(lam (dreamcoder_abstraction_2 $0 (lam (- $0 (- 0 $0)))))"
+        },
+        {
+          "fn_7 (lam (- $0 (- 0 1)))": "(lam (dreamcoder_abstraction_2 $0 (lam (- $0 (- 0 1)))))"
+        },
+        {
+          "fn_7 (lam (- (- $0 $0) $0))": "(lam (dreamcoder_abstraction_2 $0 (lam (- (- $0 $0) $0))))"
+        },
+        {
+          "fn_7 (lam (- 0 $0))": "(lam (dreamcoder_abstraction_2 $0 (lam (- 0 $0))))"
+        },
+        {
+          "fn_7 (lam (- 0 (dreamcoder_abstraction_0 $0 (lam (lam (- $1 1))) 0)))": "(lam (dreamcoder_abstraction_2 $0 (lam (- 0 (dreamcoder_abstraction_0 $0 (lam (lam (- $1 1))) 0)))))"
+        },
+        {
+          "fn_7 (lam (- 1 (+ $0 1)))": "(lam (dreamcoder_abstraction_2 $0 (lam (- 1 (+ $0 1)))))"
+        },
+        {
+          "fn_7 (lam (- 1 (+ 1 $0)))": "(lam (dreamcoder_abstraction_2 $0 (lam (- 1 (+ 1 $0)))))"
+        },
+        {
+          "fn_7 (lam (- 1 (- 0 $0)))": "(lam (dreamcoder_abstraction_2 $0 (lam (- 1 (- 0 $0)))))"
+        },
+        {
+          "fn_7 (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ 1 $1))) 0))": "(lam (dreamcoder_abstraction_2 $0 (lam (dreamcoder_abstraction_0 $0 (lam (lam (+ 1 $1))) 0))))"
+        },
+        {
+          "fn_7 (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ $1 1))) 1))": "(lam (dreamcoder_abstraction_2 $0 (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ $1 1))) 1))))"
+        },
+        {
+          "fn_7 (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ 1 $1))) 1))": "(lam (dreamcoder_abstraction_2 $0 (lam (dreamcoder_abstraction_0 (cdr $0) (lam (lam (+ 1 $1))) 1))))"
+        },
+        {
+          "fn_7 fn_5": "(lam (dreamcoder_abstraction_2 $0 fn_5))"
+        }
+      ]
+    },
+    {
+      "body": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (#1 $0 $1))) #0))",
+      "dreamcoder": "#(lambda (lambda (lambda (#(lambda (lambda (lambda (fix1 $2 (lambda (lambda (if (empty? $0) $2 ($3 ($1 (cdr $0)) (car $0))))))))) $0 (lambda (lambda ($3 $0 $1))) $2))))",
+      "arity": 2,
+      "name": "fn_8",
+      "utility": 204,
+      "final_cost": 7171,
+      "compression_ratio": 1.08534374564217,
+      "cumulative_compression_ratio": 1.8500906428671036,
+      "num_uses": 6,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_8 0 +": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (+ $0 $1))) 0))"
+        },
+        {
+          "fn_8 (cons (- 1 1) empty) cons": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons (- 1 1) empty)))"
+        },
+        {
+          "fn_8 (cons 0 (dreamcoder_abstraction_2 empty (lam $0))) cons": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons 0 (dreamcoder_abstraction_2 empty (lam $0)))))"
+        },
+        {
+          "fn_8 (cons 0 (dreamcoder_abstraction_2 empty (lam 0))) cons": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons 0 (dreamcoder_abstraction_2 empty (lam 0)))))"
+        },
+        {
+          "fn_8 (cons 0 (dreamcoder_abstraction_2 empty (lam 1))) cons": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons 0 (dreamcoder_abstraction_2 empty (lam 1)))))"
+        },
+        {
+          "fn_8 (cons 0 empty) cons": "(lam (dreamcoder_abstraction_0 $0 (lam (lam (cons $0 $1))) (cons 0 empty)))"
+        }
+      ]
+    },
+    {
+      "body": "(lam (dreamcoder_abstraction_1 $0 #1 (lam (car $0)) #0))",
+      "dreamcoder": "#(lambda (lambda (lambda (#(lambda (lambda (lambda (lambda (fix1 $3 (lambda (lambda (if ($2 $0) empty (cons ($3 $0) ($1 ($4 $0))))))))))) $0 $1 (lambda (car $0)) $2))))",
+      "arity": 2,
+      "name": "fn_9",
+      "utility": 203,
+      "final_cost": 6561,
+      "compression_ratio": 1.0929736320682824,
+      "cumulative_compression_ratio": 2.0221002895900013,
+      "num_uses": 4,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_9 (lam (empty? (cdr $0))) (lam (cdr $0))": "(lam (dreamcoder_abstraction_1 $0 (lam (cdr $0)) (lam (car $0)) (lam (empty? (cdr $0)))))"
+        },
+        {
+          "fn_9 (lam (empty? $0)) (lam (cdr (cdr $0)))": "(lam (dreamcoder_abstraction_1 $0 (lam (cdr (cdr $0))) (lam (car $0)) (lam (empty? $0))))"
+        },
+        {
+          "fn_9 (lam (empty? (cdr $0))) (lam (cdr (dreamcoder_abstraction_2 $0 (lam $0))))": "(lam (dreamcoder_abstraction_1 $0 (lam (cdr (dreamcoder_abstraction_2 $0 (lam $0)))) (lam (car $0)) (lam (empty? (cdr $0)))))"
+        },
+        {
+          "fn_9 (lam (empty? (cdr $0))) (lam (dreamcoder_abstraction_2 (cdr $0) (lam $0)))": "(lam (dreamcoder_abstraction_1 $0 (lam (dreamcoder_abstraction_2 (cdr $0) (lam $0))) (lam (car $0)) (lam (empty? (cdr $0)))))"
+        }
+      ]
+    },
+    {
+      "body": "(fn_3 #0 + 0)",
+      "dreamcoder": "#(lambda (#(lambda (lambda (lambda (#(lambda (lambda (lambda (lambda (fix1 $3 (lambda (lambda (if ($2 $0) empty (cons ($3 $0) ($1 ($4 $0))))))))))) $0 (lambda ($2 $0 1)) (lambda $0) (lambda (eq? $0 $3)))))) $0 + 0))",
+      "arity": 1,
+      "name": "fn_10",
+      "utility": 101,
+      "final_cost": 6157,
+      "compression_ratio": 1.0656163716095501,
+      "cumulative_compression_ratio": 2.154783173623518,
+      "num_uses": 2,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_10 $0": "(fn_3 $0 + 0)"
+        },
+        {
+          "fn_10 (+ $0 1)": "(fn_3 (+ $0 1) + 0)"
+        }
+      ]
+    },
+    {
+      "body": "(#1 (#1 #0))",
+      "dreamcoder": "#(lambda (lambda ($0 ($0 $1))))",
+      "arity": 2,
+      "name": "fn_11",
+      "utility": 99,
+      "final_cost": 6056,
+      "compression_ratio": 1.016677675033025,
+      "cumulative_compression_ratio": 2.1907199471598413,
+      "num_uses": 10,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_11 $0 cdr": "(cdr (cdr $0))"
+        },
+        {
+          "fn_11 $2 cdr": "(cdr (cdr $2))"
+        },
+        {
+          "fn_11 $1 (cons $0)": "(cons $0 (cons $0 $1))"
+        },
+        {
+          "fn_11 (dreamcoder_abstraction_2 $1 (lam $0)) (cons $0)": "(cons $0 (cons $0 (dreamcoder_abstraction_2 $1 (lam $0))))"
+        }
+      ]
+    },
+    {
+      "body": "(fn_7 (lam (#0 $0)))",
+      "dreamcoder": "#(lambda (#(lambda (lambda (#(lambda (lambda (#(lambda (lambda (lambda (fix1 $2 (lambda (lambda (if (empty? $0) $2 ($3 ($1 (cdr $0)) (car $0))))))))) $1 (lambda (lambda (cons ($2 $0) $1))) empty))) $0 $1))) (lambda ($1 $0))))",
+      "arity": 1,
+      "name": "fn_12",
+      "utility": 1,
+      "final_cost": 5852,
+      "compression_ratio": 1.03485987696514,
+      "cumulative_compression_ratio": 2.267088174982912,
+      "num_uses": 4,
+      "rewritten": null,
+      "rewritten_dreamcoder": null,
+      "uses": [
+        {
+          "fn_12 (+ #0)": "(fn_7 (lam (+ $0 $0)))"
+        },
+        {
+          "fn_12 (+ 1)": "(fn_7 (lam (+ 1 $0)))"
+        },
+        {
+          "fn_12 (- (- #0 #0))": "(fn_7 (lam (- (- $0 $0) $0)))"
+        },
+        {
+          "fn_12 (- 0)": "(fn_7 (lam (- 0 $0)))"
+        }
+      ]
+    }
+  ]
+}

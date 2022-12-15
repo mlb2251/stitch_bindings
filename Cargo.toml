@@ -1,22 +1,21 @@
 [package]
 name = "stitch_bindings"
-version = "0.1.0"
+version = "0.1.7"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib"]
-name = "stitch"
+name = "stitch_core"
 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-stitch_core = { git = "https://github.com/mlb2251/stitch", branch = "main"}
-# stitch_core = { git = "https://github.com/mlb2251/stitch", rev = "058890ecc3c3137c5105d673979304edfb0ab333"}
-pyo3 = {version = "0.16.1", features = ["extension-module"] }
-serde_json = {version = "1.0", features = ["preserve_order"]}
-clap = { version = "3.1.0", features = ["derive"]}
-
-
-# [patch.crates-io]
 # stitch_core = { path = "../stitch"}
+stitch_core = { git = "https://github.com/mlb2251/stitch", rev = "69d515b"}
+pyo3 = {version = "0.17.3", features = ["extension-module"] }
+clap = { version = "3.1.0" }
+
+[build-dependencies]
+pyo3-build-config = "0.17.3"
+
