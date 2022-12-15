@@ -10,7 +10,7 @@ build:
   os: "ubuntu-20.04"
   tools:
     python: "3.10"
-    rust: "1.65"
+    rust: "1.64"
 
 python:
   install:
