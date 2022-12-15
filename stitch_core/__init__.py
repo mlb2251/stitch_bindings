@@ -1,13 +1,10 @@
 # import the contents of the Rust library into the Python extension
 from .stitch_core import compress_backend,rewrite_backend
-from typing import Optional, Dict, List, Any
+from typing import Dict, List, Any
 import json
-
 
 class StitchException(Exception):
     pass
-
-
 
 class Abstraction:
     def __init__(self, name: str, body: str, arity: int):
@@ -17,8 +14,8 @@ class Abstraction:
 
 class CompressionResult:
     def __init__(self, json: Dict[str,Any]):
-        self.abstractions = [Abstraction(body=abs["body"], name=abs["name"], arity=abs["arity"]) for abs in json["abstractions"]]
-        self.rewritten = json['rewritten']
+        self.abstractions: List[Abstraction] = [Abstraction(body=abs["body"], name=abs["name"], arity=abs["arity"]) for abs in json["abstractions"]]
+        self.rewritten: List[str] = json['rewritten']
         self.json = json
 
 
@@ -75,9 +72,9 @@ def compress(
     threads: int = 1,
     silent: bool = True,
     **kwargs
-    ) -> Dict[str,Any]:
+    ) -> CompressionResult:
     """
-    run compression
+    Runs abstraction learning on a list of programs. 
     """
 
     tasks = kwargs.pop("tasks", None)
