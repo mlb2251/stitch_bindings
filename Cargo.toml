@@ -16,3 +16,7 @@ stitch_core = { git = "https://github.com/mlb2251/stitch", rev = "d66d3c7"}
 pyo3 = {version = "0.16.1", features = ["extension-module"] }
 serde_json = {version = "1.0", features = ["preserve_order"]}
 clap = { version = "3.1.0", features = ["derive"]}
+
+[build-dependencies]
+pyo3-build-config = "0.17.3"
+
