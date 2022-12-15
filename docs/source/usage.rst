@@ -23,7 +23,7 @@ The ``beep`` parameter should be either ``"bap"``, ``"boop"``,
 or ``"badoop"``. Otherwise, :py:func:`lumache.compress`
 will raise an exception.
 
-.. autoexception:: stitch.StitchException
+.. autoexception:: stitch_core.StitchException
 
 For example:
 
