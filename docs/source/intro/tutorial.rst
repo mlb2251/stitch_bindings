@@ -40,6 +40,7 @@ The full :py:func:`stitch_core.rewrite` function is given as:
 
 The example from the Overview section of the `Stitch paper <https://arxiv.org/abs/2211.16605>`_ could be written as::
 
+    from stitch_core import compress
     programs = [
         "(lam (+ 3 (* (+ 2 4) 2)))",
         "(lam (map (lam (+ 3 (* 4 (+ 3 $0)))) $0))",
@@ -53,3 +54,31 @@ The example from the Overview section of the `Stitch paper <https://arxiv.org/ab
         '(lam (* 2 (fn_0 (+ 2 1) $0)))'
         ]
 
+Loading from a file (in this case ``data/cogsci/nuts-bolts.json`` from the repo)::
+
+    with open('../data/cogsci/nuts-bolts.json','r') as f:
+        programs = json.load(f)
+    res = compress(programs, iterations=3, max_arity=3)
+    assert res.abstractions[0].body == '(T (repeat (T l (M 1 0 -0.5 (/ 0.5 (tan (/ pi #1))))) #1 (M 1 (/ (* 2 pi) #1) 0 0)) (M #0 0 0 0))'
+    assert res.abstractions[1].body == '(repeat (T (T #2 (M 0.5 0 0 0)) (M 1 0 (* #1 (cos (/ pi 4))) (* #1 (sin (/ pi 4))))) #0 (M 1 (/ (* 2 pi) #0) 0 0))'
+    assert res.abstractions[2].body == '(T (T c (M 2 0 0 0)) (M #0 0 0 0))'
+
+Working with a DreamCoder-format json file::
+
+    from stitch_core import compress
+    with open('../data/dc/origami/iteration_0_3.json','r') as f:
+        dreamcoder_json = json.load(f)
+    kwargs = from_dreamcoder(dreamcoder_json)
+    res = compress(**kwargs, iterations=3, max_arity=3)
+    assert res.abstractions[0].body == '(if (empty? (cdr #0)) #2 (#1 (cdr #0)))'
+
+
+Catching a StitchException, in this case from a malformed program (unbalanced parentheses)::
+    
+    from stitch_core import StitchException
+    bad_programs = ["(a a a"]
+    try:
+        out_json = compress(bad_programs, iterations=3)
+        assert False, "Should have thrown an exception"
+    except StitchException as e:
+        pass
