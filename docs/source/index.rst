@@ -1,20 +1,15 @@
-Welcome to stitch_core's documentation!
+Welcome to `stitch_core`'s documentation!
 =======================================
 
-**stitch_core** is a Python library providing an API to
-run `stitch <https://github.com/mlb2251/stitch>`_.
-
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
-
-.. note::
-
-   This project is under active development.
+`stitch_core` is a Python library providing Python bindings to
+run the abstraction learning tool `stitch <https://github.com/mlb2251/stitch>`_
+from the paper `Top-Down Synthesis for Library Learning <https://arxiv.org/abs/2211.16605>` (POPL 2023).
 
 Contents
---------
+===========
 
 .. toctree::
-
-   usage
+   intro/install
+   intro/tutorial
+   intro/examples
    api

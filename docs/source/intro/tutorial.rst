@@ -1,19 +1,5 @@
-Usage
-=====
-
-.. _installation:
-
-Installation
-------------
-
-To use `stitch_core`, first install it using pip:
-
-.. code-block:: console
-
-   $ pip install stitch_core --upgrade
-
-Beep boop
-----------------
+Tutorial
+========
 
 Babababa ``stitch_core.compress()`` function:
 
@@ -30,3 +16,6 @@ For example:
 >>> import stitch_core
 >>> stitch_core.compress()
 ['ayy', 'eee', 'beeeeep']
+
+
+Coming soon!
