@@ -37,6 +37,7 @@ The full :py:func:`stitch_core.rewrite` function is given as:
 .. autofunction:: stitch_core.rewrite
 
 The example from the Overview section of the `Stitch paper <https://arxiv.org/abs/2211.16605>`_ could be written as::
+    
     programs = [
         "(lam (+ 3 (* (+ 2 4) 2)))",
         "(lam (map (lam (+ 3 (* 4 (+ 3 $0)))) $0))",

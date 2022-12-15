@@ -9,7 +9,6 @@ Contents
 ========
 
 .. toctree::
-   :maxdepth: 2
    intro/install
    intro/tutorial
    intro/examples
