@@ -4,7 +4,7 @@ This repo provides Python bindings to [stitch](https://github.com/mlb2251/stitch
 
 ## Installing the bindings
 ```bash
-pip install stitch-core
+pip install stitch-core --upgrade
 ```
 
 Opening a new `python` session and running `import stitch_core` should succeed.
