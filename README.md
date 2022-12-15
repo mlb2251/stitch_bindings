@@ -39,7 +39,7 @@ Note on testing bindings: simply executing `python3 tests/test.py` may fail for 
 ## Publishing the bindings to PyPI
 
 ### Automated method
-Whenever a tag is pushed to the repo, a GitHub Action will build wheels on many common distributions of Windows / OS X / Linux and upload them all to PyPI. This is better than the manual method below in that it uploads wheels for many versions, while in the manual method there are fewer precompiled wheels so `pip` must build the wheels during `pip install stitch_core` on most distributions.
+Whenever a release is made in the repo, a GitHub Action will build wheels on many common distributions of Windows / OS X / Linux and upload them all to PyPI. This is better than the manual method below in that it uploads wheels for many versions, while in the manual method there are fewer precompiled wheels so `pip` must build the wheels during `pip install stitch_core` on most distributions.
 
 ### Manual method
 To upload the bindings to PyPI, ensure that the version number in `Cargo.toml` is incremented (or you'll get an error when uploading), and run:
