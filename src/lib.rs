@@ -89,7 +89,7 @@ fn rewrite_backend(
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn stitch(_py: Python, m: &PyModule) -> PyResult<()> {
+fn stitch_core(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(compress_backend, m)?)?;
     m.add_function(wrap_pyfunction!(rewrite_backend, m)?)?;
     Ok(())

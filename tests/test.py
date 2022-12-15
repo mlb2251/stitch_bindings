@@ -1,4 +1,4 @@
-from stitch import compress, rewrite, StitchException, from_dreamcoder, Abstraction
+from stitch_core import compress, rewrite, StitchException, from_dreamcoder, Abstraction
 import json
 
 # simple test
