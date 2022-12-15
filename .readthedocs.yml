@@ -4,6 +4,7 @@ version: 2
 
 sphinx:
   builder: html
+  fail_on_warning: true
 
 build:
   # readdocs master now includes a rust toolchain
@@ -11,6 +12,7 @@ build:
   tools:
     python: "3.10"
     rust: "1.64"
+
 
 python:
   install:
