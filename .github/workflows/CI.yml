@@ -6,6 +6,7 @@ on:
       - main
   pull_request:
   release:
+    published:
   workflow_dispatch:
 
 jobs:
@@ -69,7 +70,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'created' && startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'release' && github.event.action == 'published' && startsWith(github.ref, 'refs/tags/v')
     needs: [ macos, windows, linux, sdist ]
     steps:
       - uses: actions/download-artifact@v3
