@@ -75,3 +75,4 @@ docs/_build/
 
 # Pyenv
 .python-version
+docs/source/generated/
