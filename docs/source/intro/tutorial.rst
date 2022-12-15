@@ -1,6 +1,12 @@
 Tutorial
 ========
 
+We will assume you have already installed ``stitch_core``. If not, first see :doc:`intro/install`.
+
+
+
+
+
 Babababa ``stitch_core.compress()`` function:
 
 .. autofunction:: stitch_core.compress
