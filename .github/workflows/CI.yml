@@ -62,7 +62,7 @@ jobs:
         name: wheels
         path: dist
 
-  manual-sdist:
+  manual_sdist:
     runs-on: ubuntu-latest
     steps:
     - name: Clean up space
@@ -74,12 +74,10 @@ jobs:
         sudo rm -rf "/usr/local/share/boost"
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
         df -h
-
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
-    with:
-      python-version: '3.10' 
-
+      with:
+        python-version: '3.10' 
     - name: Manual maturin
       run: |
         python -m pip install pip --upgrade
