@@ -26,7 +26,7 @@ assert res.rewritten == [
     ]
 
 # loading from a file
-with open('data/cogsci/nuts-bolts.json','r') as f:
+with open('../data/cogsci/nuts-bolts.json','r') as f:
     programs = json.load(f)
 res = compress(programs, iterations=3, max_arity=3)
 assert res.abstractions[0].body == '(T (repeat (T l (M 1 0 -0.5 (/ 0.5 (tan (/ pi #1))))) #1 (M 1 (/ (* 2 pi) #1) 0 0)) (M #0 0 0 0))'
@@ -34,7 +34,7 @@ assert res.abstractions[1].body == '(repeat (T (T #2 (M 0.5 0 0 0)) (M 1 0 (* #1
 assert res.abstractions[2].body == '(T (T c (M 2 0 0 0)) (M #0 0 0 0))'
 
 # dreamcoder format
-with open('data/dc/origami/iteration_0_3.json','r') as f:
+with open('../data/dc/origami/iteration_0_3.json','r') as f:
     dreamcoder_json = json.load(f)
 kwargs = from_dreamcoder(dreamcoder_json)
 res = compress(**kwargs, iterations=3, max_arity=3)
@@ -65,3 +65,5 @@ try:
 except TypeError as e:
     # print(e)
     pass
+
+print("Passed all tests")

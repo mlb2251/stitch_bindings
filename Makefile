@@ -1,11 +1,11 @@
 
 
 build:
-	python3 -m maturin build --release -i python3
-	python3 -m pip install .
+	python3.8 -m maturin build --release -i python3.8
+	python3.8 -m pip install .
 
 test:
-	python3 tests/test.py
+	cd tests && python3.8 test.py
 
 clean:
 	cargo clean
