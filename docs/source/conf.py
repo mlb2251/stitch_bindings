@@ -2,12 +2,12 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'stitch_core'
+copyright = '2022, Matt Bowers'
+author = 'Matt Bowers'
 
-release = '0.1'
-version = '0.1.0'
+release = '0.1.11'
+version = '0.1.11'
 
 # -- General configuration
 

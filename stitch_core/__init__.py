@@ -4,6 +4,7 @@ from typing import Dict, List, Any
 import json
 
 class StitchException(Exception):
+    """Raised when the Stitch's Rust backend panics"""
     pass
 
 class Abstraction:
@@ -74,7 +75,14 @@ def compress(
     **kwargs
     ) -> CompressionResult:
     """
-    Runs abstraction learning on a list of programs. 
+    Runs abstraction learning on a list of programs.
+
+    :param programs: A list of programs to learn abstractions from.
+    :param iterations: The number of iterations to run abstraction learning for.
+    :param max_arity: The maximum arity of abstractions to learn.
+    :param threads: The number of threads to use.
+    :param silent: Whether to print progress to stdout.
+    :return: A CompressionResult object containing the learned abstractions, rewritten programs, and other details from the run.
     """
 
     tasks = kwargs.pop("tasks", None)

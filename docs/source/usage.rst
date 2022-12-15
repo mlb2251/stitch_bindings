@@ -10,14 +10,14 @@ To use `stitch_core`, first install it using pip:
 
 .. code-block:: console
 
-   (.venv) $ pip install stitch_core --upgrade
+   $ pip install stitch_core --upgrade
 
 Beep boop
 ----------------
 
 Babababa ``stitch_core.compress()`` function:
 
-.. autofunction:: lumache.compress
+.. autofunction:: stitch_core.compress
 
 The ``beep`` parameter should be either ``"bap"``, ``"boop"``,
 or ``"badoop"``. Otherwise, :py:func:`lumache.compress`
