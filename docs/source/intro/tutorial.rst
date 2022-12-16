@@ -3,11 +3,11 @@
 Tutorial
 ========
 
-We will assume you have already installed ``stitch_core``. If not, first see :ref:`intro-install`.
+If you have not already installed ``stitch_core``, see :ref:`intro-install`.
 
 
-Minimal Example
-^^^^^^^^^^^^^^^
+Basic Example
+^^^^^^^^^^^^^
 
 The programs from the example in the Overview section of the `Stitch paper <https://arxiv.org/abs/2211.16605>`_ could be written as follows::
 
@@ -17,16 +17,14 @@ The programs from the example in the Overview section of the `Stitch paper <http
         "(lam (* 2 (+ 3 (* $0 (+ 2 1)))))"
     ]
 
-Each program is a string written in a lisp-like lambda calculus syntax.
-
-Primer on program format:
+Each program is a string written in a lisp-like lambda calculus syntax:
  * Variables should be written as *de Bruijn* indices (i.e. ``$i`` refers to the variable bound by the ``i`` th lambda above it) so ``λx. λy. x y`` is written ``(lam (lam ($1 $0)))``
  * Lambdas need explicit parentheses around their body so ``(lam + 3 2)`` should instead be written ``(lam (+ 3 2))``. The
    parser outputs an error message explaining this if you make this mistake. Lambdas can also be written with ``lambda`` instead
    of ``lam`` but the output of stitch will always be normalized to use ``lam``.
- * Be sure to balance your parentheses.
- * You don't need to pre-define a DSL or anything. Any space-separated series of tokens that isn't reserved for something else is treated as a DSL primitive, like ``+``, ``foo``, ``-0.5`` etc.
- * Check out other examples `here <https://github.com/mlb2251/stitch_bindings/blob/main/data>`__.
+ * Be sure to balance your parentheses or you will get an error.
+ * You don't need to pre-define the language you are using. Any series of tokens with no whitespace that isn't reserved for something else is treated as a language primitive, like ``+``, ``foo``, ``-0.5`` etc. Only ``app`` and ``lam`` are reserved. Primitives may not begin with ``#`` or ``$`` and may not contain parentheses or whitespace.
+ * Check out other example programs `here <https://github.com/mlb2251/stitch_bindings/blob/main/data>`__.
 
 The largest common structure in these examples is that they all contain a subterm of the form ``(+ 3 (* _ _))``.
 This structure can be represented with the lambda abstraction ``λx. λy. (+ 3 (* y x))``. We can find this with stitch:
@@ -52,7 +50,7 @@ Here ``iterations=1`` controls the number of abstractions that are learned.
 Abstractions are named like ``fn_0``, ``fn_1``, etc., while arguments to these abstractions are 
 named like ``#0``, ``#1``, etc.
 
-We could then rewrite a new set of programs using this same abstraction like so:
+We could rewrite a new set of programs using this learned abstraction like so:
 
 >>> from stitch_core import rewrite
 >>> rewrite(["(lam (+ 3 (* (+ 1 1) 1)))", "(lam (- 5 (+ 3 (* $0 (+ 2 1)))))"], res.abstractions)
@@ -62,10 +60,12 @@ We could then rewrite a new set of programs using this same abstraction like so:
 ]
 
 Note that ``res.json`` contains a huge amount of detail about the compression process, including statistics
-on how much compression is achieved, usage locations of each abstraction, and if ``compress(rewritten_intermediates=True)`` is passed
-then the intermediate programs after each iteration of compression are included too.
+on how much compression is achieved, how many times each abstraction is used, what arguments are passed to
+the abstraction each time it is used, etc. Additional kwargs (:ref:`compress_kwargs`) can control the inclusion
+of extra information as well, for example if ``compress(rewritten_intermediates=True)`` is passed
+then the intermediate programs after each iteration of compression are included in the output.
 
-There is a lot of customizability in :py:func:`stitch_core.compress` (see also :ref:`compress_kwargs`), anything supported by
+There is a lot of customizability in :py:func:`stitch_core.compress` (see :ref:`compress_kwargs` for a full list of options), anything supported by
 the Rust library is also supported in these Python bindings.
 
 Functions & Classes
