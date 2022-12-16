@@ -3,7 +3,7 @@
 Installation
 ============
 
-`stitch_core` requires `python >= 3.7`
+``stitch_core`` requires ``python >= 3.7``
 
 .. code-block:: console
 

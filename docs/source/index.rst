@@ -13,4 +13,4 @@ Contents
    intro/tutorial
    intro/examples
    api
-   compress_args
+   compress_kwargs
