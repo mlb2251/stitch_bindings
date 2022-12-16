@@ -37,6 +37,9 @@ for entry in entries:
     lines = [l.strip() for l in entry.split('\n') if l.strip() != '']
     # --no-top-lambda becomes no_top_lambda
     arg = re.search(r'--((-|\w)+)', lines[0]).group(1).replace('-','_')
+    if arg in ['help', 'shuffle', 'truncate']:
+        continue
+
     takes_val = re.search(r'<(\w+)>', lines[0]) is not None
     val = ' <val>' if takes_val else ''
     print(f"{indent}* - ``{arg}{val}``")

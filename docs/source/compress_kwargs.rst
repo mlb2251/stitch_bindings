@@ -1,7 +1,9 @@
 .. _compress_kwargs:
 
-Compression Keword Arguments Listing
+compress() Keyword Arguments Listing
 ====================================
+
+See also the documentation for :py:func:`stitch_core.compress`.
 
 .. list-table::
         :header-rows: 1
@@ -41,8 +43,6 @@ Compression Keword Arguments Listing
             pattern are encountered
         * - ``follow_prune``
           - for use with ``--follow``, enables aggressive pruning
-        * - ``help``
-          - Print help information
         * - ``hole_choice <val>``
           - Method for choosing hole to expand at each step, doesn't have a huge effect [default:
             depth-first] [possible values: random, breadth-first, depth-first, max-largest-subset,
@@ -100,16 +100,11 @@ Compression Keword Arguments Listing
         * - ``rewritten_intermediates``
           - include ``rewritten`` from each intermediate rewritten result in the output json after
             each invention
-        * - ``shuffle``
-          - shuffle order of set of inventions
         * - ``silent``
           - zero printouts at all except in the case of a panic. See also --quiet to just silence
             internal printouts during each compression step
         * - ``threads <val>``
           - number of threads (no parallelism if set to 1) [default: 1]
-        * - ``truncate <val>``
-          - truncate set of inventions to include only this many (happens after shuffle if shuffle
-            is also specified)
         * - ``utility_by_rewrite``
           - calculate utility exhaustively by performing a full rewrite; mainly used when cost
             mismatches are happening and we need something slow but accurate

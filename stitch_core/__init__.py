@@ -69,7 +69,8 @@ def from_dreamcoder(json: Dict[str,Any]):
     return dict(
         programs=programs,
         tasks=tasks,
-        anonymous_to_named=anonymous_to_named
+        anonymous_to_named=anonymous_to_named,
+        rewritten_dreamcoder=True,
     )
 
 def rewrite(
@@ -78,16 +79,34 @@ def rewrite(
     **kwargs
     ) -> List[str]:
     """
-    todo description
+    Rewrites a set of programs with a list of abstractions. Rewrites first with abstractions[0],
+    then abstractions[1], etc.
+
+    :param programs: A list of programs to rewrite.
+    :type programs: List[str]
+    :param abstractions: A list of Abstraction objects to rewrite with.
+    :type abstractions: List[Abstraction]
+    :param \**kwargs: Additional arguments to pass to the Rust backend. These are the same as :ref:`compress_kwargs` since rewriting performs a form of compression under the hood, however most are not relevant to rewriting.
+    :raises StitchException: If the Rust backend panics.
+    :raises TypeError: If the wrong types are provided for arguments.
+    :return: A list of rewritten programs.
+    :rtype: List[str]
     """
 
     args = " ".join([build_arg(k, v) for k, v in kwargs.items()])
 
-    return rewrite_backend(
-        programs,
-        abstractions,
-        args
-    )
+    try:
+        return rewrite_backend(
+            programs,
+            abstractions,
+            args
+        )
+    except BaseException as e:
+        if e.__class__.__name__ == "PanicException":
+            raise StitchException(f"Rust backend panicked with exception: {e}")
+        else:
+            raise # eg TypeError from pyo3 conversion
+
 
 def compress(
     programs: List[str],
@@ -110,8 +129,7 @@ def compress(
     :type threads: int
     :param silent: Whether to print progress to stdout.
     :type silent: bool
-    :param kwargs: Additional arguments to pass to the Rust backend. See :ref:`compress_kwargs` for a full listing.
-    :type kwargs: Dict[str,Any]
+    :param \**kwargs: Additional arguments to pass to the Rust backend. See :ref:`compress_kwargs` for a full listing.
     :raises StitchException: If the Rust backend panics.
     :raises TypeError: If the wrong types are provided for arguments.
     :return: A CompressionResult object containing the learned abstractions, rewritten programs, and other details from the run.
