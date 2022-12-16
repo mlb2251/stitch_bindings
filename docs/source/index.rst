@@ -16,3 +16,4 @@ Contents
    api
    compress_kwargs
    out_json
+   cost_metrics
