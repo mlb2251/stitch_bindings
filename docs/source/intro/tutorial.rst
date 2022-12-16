@@ -65,7 +65,8 @@ Note that ``res.json`` contains a huge amount of detail about the compression pr
 on how much compression is achieved, usage locations of each abstraction, and if ``compress(rewritten_intermediates=True)`` is passed
 then the intermediate programs after each iteration of compression are included too.
 
-There is a *huge* amount of customizability in :py:func:`stitch_core.compress` (see also :ref:`compress_kwargs`)
+There is a lot of customizability in :py:func:`stitch_core.compress` (see also :ref:`compress_kwargs`), anything supported by
+the Rust library is also supported in these Python bindings.
 
 Functions & Classes
 ^^^^^^^^^^^^^^^^^^^
