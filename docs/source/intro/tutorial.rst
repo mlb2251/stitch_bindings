@@ -20,7 +20,7 @@ The programs from the example in the Overview section of the `Stitch paper <http
 Each program is a string written in a lisp-like lambda calculus syntax.
 
 Primer on program format:
- * Variables should be written as *de Bruijn* indices (i.e. ``$i`` refers to the variable bound by the ``i``th lambda above it) so ``λx. λy. x y`` is written ``(lam (lam ($1 $0)))``
+ * Variables should be written as *de Bruijn* indices (i.e. ``$i`` refers to the variable bound by the ``i`` th lambda above it) so ``λx. λy. x y`` is written ``(lam (lam ($1 $0)))``
  * Lambdas need explicit parentheses around their body so ``(lam + 3 2)`` should instead be written ``(lam (+ 3 2))``. The
    parser outputs an error message explaining this if you make this mistake. Lambdas can also be written with ``lambda`` instead
    of ``lam`` but the output of stitch will always be normalized to use ``lam``.
