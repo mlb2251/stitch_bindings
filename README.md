@@ -2,18 +2,7 @@
 
 This repo provides Python bindings to [stitch](https://github.com/mlb2251/stitch) compatible with `python >= 3.7`
 
-## Installing the bindings
-```bash
-pip install stitch-core --upgrade
-```
-
-Opening a new `python` session and running `import stitch_core` should succeed.
-
-## Using the bindings
-
-**Dec 15 Note: Tutorial coming shortly**
-
-For more usage examples, see `tests/test.py` in this repo.
+See the [Documentation](https://stitch-bindings.readthedocs.io/en/stable/) for installation instructions and a tutorial.
 
 ## Locally building the bindings
 Adjust the `rev` value in `Cargo.toml` to the desired commit SHA:
