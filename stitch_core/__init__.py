@@ -8,12 +8,35 @@ class StitchException(Exception):
     pass
 
 class Abstraction:
+    """
+    An abstraction.
+
+    :param name: the name of the abstraction, like "fn_0"
+    :type name: str
+    :param body: the body of the abstraction, like "(+ 3 (* #1 #0))". Variables are represented as "#0", "#1", etc.
+    :type body: str
+    :param arity: the arity of the abstraction, like 2
+    :type arity: int
+    """
     def __init__(self, name: str, body: str, arity: int):
         self.name = name
         self.body = body
         self.arity = arity
+    def __repr__(self):
+        args = ','.join([f'#{i}' for i in range(self.arity)])
+        return f"{self.name}({args}) := {self.body}"
 
 class CompressionResult:
+    """
+    The result of calling compress().
+
+    :param abstractions: a list of Abstraction objects
+    :type abstractions: List[Abstraction]
+    :param rewritten: a list of programs, where each program has been rewritten using the abstractions
+    :type rewritten: List[str]
+    :param json: the raw JSON output from the Rust backend, containing lots of additional information
+    :type json: Dict[str,Any]
+    """
     def __init__(self, json: Dict[str,Any]):
         self.abstractions: List[Abstraction] = [Abstraction(body=abs["body"], name=abs["name"], arity=abs["arity"]) for abs in json["abstractions"]]
         self.rewritten: List[str] = json['rewritten']
@@ -78,12 +101,21 @@ def compress(
     Runs abstraction learning on a list of programs.
 
     :param programs: A list of programs to learn abstractions from.
+    :type programs: List[str]
     :param iterations: The number of iterations to run abstraction learning for.
+    :type iterations: int
     :param max_arity: The maximum arity of abstractions to learn.
+    :type max_arity: int
     :param threads: The number of threads to use.
+    :type threads: int
     :param silent: Whether to print progress to stdout.
+    :type silent: bool
     :param kwargs: Additional arguments to pass to the Rust backend. See :ref:`compress_kwargs` for a full listing.
+    :type kwargs: Dict[str,Any]
+    :raises StitchException: If the Rust backend panics.
+    :raises TypeError: If the wrong types are provided for arguments.
     :return: A CompressionResult object containing the learned abstractions, rewritten programs, and other details from the run.
+    :rtype: CompressionResult
     """
 
     tasks = kwargs.pop("tasks", None)

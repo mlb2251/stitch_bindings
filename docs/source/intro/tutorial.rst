@@ -18,6 +18,7 @@ Lets do some basic abstraction learning. Here we'll two programs ``(a a a)`` and
 Abstractions are given unique names ``fn_0``, ``fn_1``, etc., while arguments to these abstractions are represented as ``#0``, ``#1``, etc.
 
 We could then rewrite a new set of programs using this same abstraction like so:
+
 >>> from stitch_core import rewrite
 >>> programs_to_rewrite = ["(c c c)", "(d d d)"]
 >>> rewrite(programs_to_rewrite, res.abstractions)
@@ -28,11 +29,12 @@ The full :py:func:`stitch_core.compress` function is given as:
 
 .. autofunction:: stitch_core.compress
 
-And may raise an exception if the Rust backend panics:
+
+.. autoclass:: stitch_core.CompressionResult
+
+.. autoclass:: stitch_core.Abstraction
 
 .. autoexception:: stitch_core.StitchException
-
-or may raise a ``TypeError`` if incorrect argument types are provided.
 
 The full :py:func:`stitch_core.rewrite` function is given as:
 
@@ -74,7 +76,7 @@ Working with a DreamCoder-format json file::
 
 
 Catching a StitchException, in this case from a malformed program (unbalanced parentheses)::
-    
+
     from stitch_core import StitchException
     bad_programs = ["(a a a"]
     try:
