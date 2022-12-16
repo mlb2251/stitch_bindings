@@ -12,7 +12,7 @@ name = "stitch_core"
 
 [dependencies]
 # stitch_core = { path = "../stitch"}
-stitch_core = { git = "https://github.com/mlb2251/stitch", rev = "2bda6fd"}
+stitch_core = { git = "https://github.com/mlb2251/stitch", rev = "9f5db15da3dd0599df9a0b90e9b9b27bf99ebff7"}
 pyo3 = {version = "0.17.3", features = ["extension-module"] }
 clap = { version = "3.1.0" }
 

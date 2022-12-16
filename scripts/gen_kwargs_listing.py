@@ -52,6 +52,3 @@ for entry in entries:
         print(f"{lines[0]}")
     for line in lines[1:]:
         print(f"{indent}    {line}")
-
-
-
