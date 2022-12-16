@@ -29,7 +29,17 @@ templates_path = ['_templates']
 
 # -- Options for HTML output
 
+html_static_path = ['../static']
+
 html_theme = 'sphinx_rtd_theme'
+
+html_style = 'css/custom.css'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'css/custom.css',
+]
