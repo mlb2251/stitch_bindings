@@ -59,9 +59,9 @@ We could rewrite a new set of programs using this learned abstraction like so:
     '(lam (- 5 (fn_0 (+ 2 1) $0)))'
 ]
 
-Note that ``res.json`` contains a huge amount of detail about the compression process, including statistics
+Note that ``res.json`` contains a huge amount of extra outputs and information, see :ref:`out-json` for details. This includes statistics
 on how much compression is achieved, how many times each abstraction is used, what arguments are passed to
-the abstraction each time it is used, etc. Additional kwargs (:ref:`compress_kwargs`) can control the inclusion
+the abstraction each time it is used, etc. Additional kwargs can control the inclusion
 of extra information as well, for example if ``compress(rewritten_intermediates=True)`` is passed
 then the intermediate programs after each iteration of compression are included in the output.
 

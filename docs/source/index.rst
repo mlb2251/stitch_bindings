@@ -15,3 +15,4 @@ Contents
    intro/examples
    api
    compress_kwargs
+   out_json
