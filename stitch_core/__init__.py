@@ -82,7 +82,7 @@ def compress(
     :param max_arity: The maximum arity of abstractions to learn.
     :param threads: The number of threads to use.
     :param silent: Whether to print progress to stdout.
-    :param kwargs: Additional arguments to pass to the Rust backend. See :ref:`_compress_kwargs` for a full listing.
+    :param kwargs: Additional arguments to pass to the Rust backend. See :ref:`compress_kwargs` for a full listing.
     :return: A CompressionResult object containing the learned abstractions, rewritten programs, and other details from the run.
     """
 
