@@ -10,102 +10,120 @@
         * - ``tasks <val>``
           - A ``List[str]`` equal in length to ``programs`` that gives names for the task each program is solving. If not provided, defaults to each program solving a unique task. This is only relevant for a DreamCoder-style compression metric that takes a *min* over programs within each task. See :ref:`compression_objectives` for more details.
         * - ``max_arity <val>``
-          - max arity of abstractions to find (will find all from 0 to this number inclusive)
-            [default: 2]
+          - Max arity of abstractions to find (will find arities from 0 to this number inclusive).
+            Note that scaling with arity can be very expensive [default: 2]
         * - ``abstraction_prefix <val>``
-          - prefix used to generate names of new abstractions, by default we will name our
+          - Prefix used to generate names of new abstractions, by default we will name our
             abstractions fn_0, fn_1, fn_2, etc [default: fn\_]
         * - ``allow_single_task``
-          - allow for abstractions that are only useful in a single task
+          - Allow for abstractions that are only useful in a single task (defaults to False like
+            DreamCoder)
         * - ``batch <val>``
-          - how many worklist items a thread will take at once [default: 1]
+          - How many worklist items a thread will take at once [default: 1]
         * - ``cost_app <val>``
-          - Override ``cost`` with a custom application cost [default: 1]
+          - Sets cost for applications in the lambda calculus [default: 1]
         * - ``cost_ivar <val>``
-          - Override ``cost`` with a custom abstraction variable cost [default: 100]
+          - Sets cost for ``#i`` abstraction variables [default: 100]
         * - ``cost_lam <val>``
-          - Override ``cost`` with a custom lambda cost [default: 1]
+          - Sets cost for lambdas [default: 1]
         * - ``cost_prim_default <val>``
-          - Override ``cost`` with a custom default primitive cost [default: 100]
+          - Sets cost for primitives like ``+`` and ``*`` [default: 100]
         * - ``cost_var <val>``
-          - Override ``cost`` with a custom $i variable cost [default: 100]
+          - Sets cost for ``$i`` variables [default: 100]
         * - ``dreamcoder_comparison``
-          - anything related to running a dreamcoder comparison
+          - Extra printouts related to running a dreamcoder comparison. Section 6.1 of Stitch paper
+            https://arxiv.org/abs/2211.16605
         * - ``dynamic_batch``
-          - threads will autoadjust how large their batches are based on the worklist size
+          - Threads will autoadjust how large their batches are based on the worklist size
         * - ``follow <val>``
-          - pattern or abstraction to follow. if ``follow_prune=True`` we will aggressively prune to
-            only follow this pattern, otherwise we will just verbosely print when ancestors of this
-            pattern are encountered
+          - Pattern or abstraction to follow and give prinouts about. If ``follow_prune=True`` we will
+            aggressively prune to only follow this pattern, otherwise we will just verbosely print
+            when ancestors of this pattern are encountered
         * - ``follow_prune``
-          - for use with ``--follow``, enables aggressive pruning
+          - For use with ``follow``, enables aggressive pruning. Useful for ensuring that it is
+            *possible* to find a particular abstraction by guiding the search directly towards it
         * - ``hole_choice <val>``
-          - Method for choosing hole to expand at each step, doesn't have a huge effect [default:
+          - Method for choosing hole to expand at each step. Doesn't have a huge effect [default:
             depth-first] [possible values: random, breadth-first, depth-first, max-largest-subset,
             high-entropy, low-entropy, max-cost, min-cost, many-groups, few-groups, few-apps]
         * - ``iterations <val>``
-          - Number of iterations to run compression for (number of inventions to find) [default: 3]
+          - Maximum number of iterations to run compression for (number of inventions to find,
+            though stitch will stop early if no compressive abstraction exists) [default: 3]
         * - ``inv_arg_cap``
-          - disables the edge case handling where argument capture needs to be inverted for
-            optimality
+          - Enables edge case handling where inverting the argument capture subsumption pruning is
+            needed for optimality. Generally not relevant just included for completeness, see the
+            footnoted section of Section 4.3 of the Stitch paper https://arxiv.org/abs/2211.16605
         * - ``inv_candidates <val>``
-          - Number of invention candidates compression_step should return in a *single* step. Note
-            that these will be the top n optimal candidates modulo subsumption pruning (and the
-            top-1  is guaranteed to be globally optimal) [default: 1]
+          - [currently not used] Number of invention candidates compression_step should return in a
+            *single* step. Note that these will be the top n optimal candidates modulo subsumption
+            pruning (and the top-1 is guaranteed to be globally optimal) [default: 1]
         * - ``no_mismatch_check``
-          - disables the safety check for the utility being correct; you only want to do this if you
+          - Disables the safety check for the utility being correct; you only want to do this if you
             truly dont mind unsoundness for a minute
         * - ``no_opt``
-          - disable all optimizations
+          - Disable all optimizations
         * - ``no_opt_arity_zero``
-          - disable the arity zero priming optimization
+          - Disable the arity zero optimization, which searches first for the most compressive
+            arity-zero abstraction since this is extremely fast to find and provides a good starting
+            point for our upper bound pruning. In practice this isn't a very important optimization
         * - ``no_opt_force_multiuse``
-          - disable the force multiuse pruning optimization
+          - Disable *redundant argument elimination* pruning (aka "force multiuse"). Section 4.3 of
+            Stitch paper https://arxiv.org/abs/2211.16605 This is a fairly important optimization
+            (ablation study in Section 6.4 of Stitch paper)
         * - ``no_opt_single_use``
-          - disable the single structurally hashed subtree match pruning
+          - Disable the single structurally hashed subtree match pruning. This is a very minor
+            optimization that allows discarding certain abstractions that only match at a single
+            unique subtree as long as that subtree lacks free variables, because arity zero
+            abstractions are always superior in this case
         * - ``no_opt_upper_bound``
-          - disable the upper bound pruning optimization
+          - Disable *upper bound* based pruning. Section 4.2 of Stitch paper
+            https://arxiv.org/abs/2211.16605 This is an extremely important optimization (ablation
+            study in Section 6.4 of Stitch paper)
         * - ``no_opt_useless_abstract``
-          - disable the useless abstraction pruning optimization
+          - Disable *argument capture* pruning (aka "useless abstraction pruning"). Section 4.3 of
+            Stitch paper https://arxiv.org/abs/2211.16605 This is an extremely important
+            optimization (ablation study in Section 6.4 of Stitch paper)
         * - ``no_other_util``
-          - makes it so utility is based purely on corpus size without adding in the abstraction
-            size
+          - Switch to utility based purely on program size without adding in the abstraction size
+            (aka the "structure penalty" in DreamCoder)
         * - ``no_stats``
           - Disable stat logging - note that stat logging in multithreading requires taking a mutex
             so it can be a source of slowdown in the massively multithreaded case, hence this flag
             to disable it
         * - ``no_top_lambda``
-          - makes it so inventions cant start with a lambda at the top
+          - Makes it so inventions cant start with a lambda at the top
         * - ``previous_abstractions <val>``
           - Number of previous abstractions that have been found before this round of compression -
             this is used to calculate what the next abstraction name should be - for example if 2
             abstractions have been found previously then the next abstraction will be fn_2 [default:
             0]
         * - ``print_stats <val>``
-          - print stats this often (0 means never) [default: 0]
+          - Print stats this often (0 means never) [default: 0]
         * - ``quiet``
-          - silence all printing within a compression step. See ``--silent`` to silence truly all
-            outputs
+          - Silence all printing within a compression step. See ``silent`` to silence all outputs
+            between compression steps as well
         * - ``show_rewritten``
-          - print out programs rewritten under abstraction
+          - Print out programs rewritten under abstraction
         * - ``rewrite_check``
-          - whenever you finish an invention do a full rewrite to check that rewriting doesnt raise
-            a cost mismatch exception
+          - Used for soundness testing. Whenever you finish an invention do a full rewrite to check
+            that rewriting doesnt raise a cost mismatch exception
         * - ``rewritten_dreamcoder``
-          - include ``rewritten_dreamcoder`` in the output json
+          - Include the dreamcoder-format rewritten programs in the output
         * - ``rewritten_intermediates``
-          - include ``rewritten`` from each intermediate rewritten result in the output json after
-            each invention
+          - For each abstraction learned, includes the rewritten programs right after learning that
+            abstraction in the output. If ``rewritten_dreamcoder`` is also specified, then the
+            rewritten programs in dreamcoder format will also be included
         * - ``silent``
-          - zero printouts at all except in the case of a panic. See also --quiet to just silence
-            internal printouts during each compression step
+          - Disables all prinouts except in the case of a panic. See also ``quiet`` to just silence
+            internal printouts during each compression step In Python this defaults to True
         * - ``threads <val>``
-          - number of threads (no parallelism if set to 1) [default: 1]
+          - Number of threads to use for compression (no parallelism if set to 1) [default: 1]
         * - ``utility_by_rewrite``
-          - calculate utility exhaustively by performing a full rewrite; mainly used when cost
-            mismatches are happening and we need something slow but accurate
+          - Calculate utility exhaustively by performing a full rewrite. Used for debugging when
+            cost mismatch exceptions are happening and we need something slow but accurate as a
+            temporary solution
         * - ``verbose_best``
-          - prints whenever a new best abstraction is found
+          - Prints whenever a new best abstraction is found
         * - ``verbose_worklist``
-          - prints every worklist item as it is processed (will slow things down a ton due to
-            rendering out expressins)
+          - Prints every worklist item as it is processed (will slow things down a ton due to
+            rendering out expressions)
