@@ -5,6 +5,10 @@
 
         * - Argument
           - Description
+        * - ``programs <val>``
+          - The ``List[str]`` of programs to learn abstractions from.
+        * - ``tasks <val>``
+          - A ``List[str]`` equal in length to ``programs`` that gives names for the task each program is solving. If not provided, defaults to each program solving a unique task. This is only relevant for a DreamCoder-style compression metric that takes a *min* over programs within each task. See :ref:`compression_objectives` for more details.
         * - ``max_arity <val>``
           - max arity of abstractions to find (will find all from 0 to this number inclusive)
             [default: 2]

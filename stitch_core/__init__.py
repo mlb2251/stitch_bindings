@@ -9,7 +9,7 @@ class StitchException(Exception):
 
 class Abstraction:
     """
-    An abstraction.
+    A functional abstraction
 
     :param name: the name of the abstraction, like "fn_0"
     :type name: str
@@ -43,9 +43,23 @@ class CompressionResult:
         self.json = json
 
 
-def from_dreamcoder(json: Dict[str,Any]):
+def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
     """
-    Takes a dreamcoder-style dictionary and returns a dictionary of arguments to pass to stitch.compress()
+    Takes a dreamcoder-style json dictionary and returns a dictionary of arguments to pass as kwargs to stitch.compress().
+
+    The following keys will be in the returned dictionary:
+     - `anonymous_to_named`: This is a mapping from anonymous abstractions to named abstractions, for example from "#(lambda (+ $0 2))" to "fn_2", since
+       DreamCoder operates over anonymous abstractions while Stitch operates over named ones. Since there isn't a canonical ordering to the anonymous
+       abstractions in a dreamcoder-style json, this function will sort them by length and use that as the ordering, since this has the property that
+       abstractions used within larger abstractions will be named first.
+     - `programs`: These are the programs translated from anonymous format to named format
+     - `tasks`: These are the tasks associated with each program, since DreamCoder has a concept of tasks. See also :ref:`compression_objectives`.
+     - `rewritten_dreamcoder=True`: This is a flag that tells compress() to return the dreamcoder-formatted programs in the `.json["rewritten_dreamcoder]` fied of its output.
+
+    :param json: A dreamcoder-style json dictionary.
+    :type json: Dict[str,Any]
+    :return: A dictionary of arguments to pass as kwargs to stitch.compress().
+    :rtype: Dict[str,Any]
     """
 
     frontiers = json["frontiers"]
@@ -80,7 +94,7 @@ def rewrite(
     ) -> List[str]:
     """
     Rewrites a set of programs with a list of abstractions. Rewrites first with abstractions[0],
-    then abstractions[1], etc.
+    then abstractions[1], etc. Will not perform a rewrite if it is not compressive.
 
     :param programs: A list of programs to rewrite.
     :type programs: List[str]
@@ -117,11 +131,16 @@ def compress(
     **kwargs
     ) -> CompressionResult:
     """
-    Runs abstraction learning on a list of programs.
+    Runs abstraction learning on a list of programs, optimizing for a compression objective (see :ref:`compression_objectives`).
+    This will run for at most ``iterations`` steps, on each step finding the most compressive abstraction, and rewriting the programs
+    to use it, then passing the rewritten programs onto the next iteration of compression. If no compressive abstraction exists on an
+    iteration, compress() will stop early before its ``iterations`` limit is reached.
+
+    Learned abstractions can call earlier abstractions that were learned, thus building up a hierarchy of increasingly complex abstractions.
 
     :param programs: A list of programs to learn abstractions from.
     :type programs: List[str]
-    :param iterations: The number of iterations to run abstraction learning for.
+    :param iterations: The maximum number of iterations to run abstraction learning for.
     :type iterations: int
     :param max_arity: The maximum arity of abstractions to learn.
     :type max_arity: int

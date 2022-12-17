@@ -31,7 +31,11 @@ print(f"""
 {indent}:widths: 30 70
 
 {indent}* - Argument
-{indent}  - Description""")
+{indent}  - Description
+{indent}* - ``programs <val>``
+{indent}  - The ``List[str]`` of programs to learn abstractions from.
+{indent}* - ``tasks <val>``
+{indent}  - A ``List[str]`` equal in length to ``programs`` that gives names for the task each program is solving. If not provided, defaults to each program solving a unique task. This is only relevant for a DreamCoder-style compression metric that takes a *min* over programs within each task. See :ref:`compression_objectives` for more details.""")
 
 for entry in entries:
     lines = [l.strip() for l in entry.split('\n') if l.strip() != '']

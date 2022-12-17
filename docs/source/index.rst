@@ -17,3 +17,4 @@ Contents
    compress_kwargs
    out_json
    cost_metrics
+   compression_objectives
