@@ -77,6 +77,8 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
             for (name, anonymous) in reversed(anonymous_to_named):
                 program = program.replace(anonymous, name)
             assert '#' not in program
+            # replace "lambda" with "lam". Note that lambdas always appear with parens to their left and a space to their right
+            program = program.replace("(lambda ", "(lam ")
             programs.append(program)
             tasks.append(task)
 
