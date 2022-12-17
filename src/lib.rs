@@ -15,11 +15,14 @@ fn compress_backend(
     programs: Vec<String>,
     tasks: Option<Vec<String>>,
     anonymous_to_named: Option<Vec<(String,String)>>,
+    panic_loud: bool,
     args: String,
 ) -> PyResult<String> {
 
     // disable the printing of panics, so that the only panic we see is the one that gets passed along in an Exception to Python
-    std::panic::set_hook(Box::new(|_| {}));
+    if !panic_loud {
+        std::panic::set_hook(Box::new(|_| {}));
+    }
 
     let cfg = match MultistepCompressionConfig::try_parse_from(format!("compress {args}").split_whitespace()) {
         Ok(cfg) => cfg,
@@ -45,16 +48,20 @@ fn rewrite_backend(
     py: Python,
     programs: Vec<String>,
     abstractions: Vec<&PyAny>,
+    panic_loud: bool,
     args: String,
 ) -> PyResult<Vec<String>> {
 
     // disable the printing of panics, so that the only panic we see is the one that gets passed along in an Exception to Python
-    std::panic::set_hook(Box::new(|_| {}));
+    if !panic_loud{
+        std::panic::set_hook(Box::new(|_| {}));
+    }
 
     let cfg = match CompressionStepConfig::try_parse_from(format!("compress {args}").split_whitespace()) {
         Ok(cfg) => cfg,
         Err(e) => panic!("Error parsing arguments: {}", e),
     };
+
 
     let programs: Vec<ExprOwned> = programs.iter().map(|p| {
         let mut set = ExprSet::empty(Order::ChildFirst, false, false);

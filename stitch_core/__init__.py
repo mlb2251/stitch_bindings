@@ -107,12 +107,15 @@ def rewrite(
     :rtype: List[str]
     """
 
+    panic_loud = kwargs.pop('panic_loud',False)
+
     args = " ".join([build_arg(k, v) for k, v in kwargs.items()])
 
     try:
         return rewrite_backend(
             programs,
             abstractions,
+            panic_loud,
             args
         )
     except BaseException as e:
@@ -157,6 +160,7 @@ def compress(
 
     tasks = kwargs.pop("tasks", None)
     anonymous_to_named = kwargs.pop("anonymous_to_named", None)
+    panic_loud = kwargs.pop('panic_loud',False)
 
     kwargs.update(dict(
         iterations=iterations,
@@ -172,6 +176,7 @@ def compress(
             programs,
             tasks,
             anonymous_to_named,
+            panic_loud,
             args)
     except BaseException as e:
         if e.__class__.__name__ == "PanicException":
