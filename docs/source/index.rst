@@ -12,7 +12,6 @@ Contents
 
    intro/install
    intro/tutorial
-   intro/examples
    api
    compress_kwargs
    out_json
