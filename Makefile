@@ -1,5 +1,6 @@
 
 PYTHON := python3
+SEEDS := 3
 
 all: build install test docs
 
@@ -22,4 +23,10 @@ clean:
 kwargs:
 	cd scripts && ${PYTHON} gen_kwargs_listing.py > ../docs/source/generated_kwargs_table.rst
 
-.PHONY: all build install test docs clean
+claim-1:
+	cd experiments && make claim-1
+
+claim-2:
+	cd experiments && make claim-2 SEEDS=${SEEDS}
+
+.PHONY: all build install test docs clean claim-1 claim-2
