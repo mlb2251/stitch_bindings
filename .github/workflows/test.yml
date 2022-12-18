@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: rustup update stable && rustup default stable
-      - run: pip install prettytable matplotlib seaborn
+      - run: python3 -m pip install prettytable matplotlib seaborn
       - name: build
         run: make build
       - name: install
