@@ -771,11 +771,9 @@ if __name__ == '__main__':
                 compress_kwargs = from_dreamcoder(dc_json)
                 max_arity = dc_json['arity']
 
-                dc_invs = process_dreamcoder_inventions(bench_path, dc_result / "raw" / bench_name)
                 dc_processed = load(dc_result / "processed" / bench_name)
 
-                iterations = len(dc_invs['inventions'])
-                assert iterations == dc_processed['num_inventions']
+                iterations = dc_processed['num_inventions']
 
                 if iterations == 0:
                     print("[it=0]",end="",flush=True)
@@ -798,8 +796,6 @@ if __name__ == '__main__':
                 data['stitch'][domain]['time_per_inv_with_rewrite'].append(runtime / iterations)
                 data['stitch'][domain]['runtime_internal'].append(runtime_internal / 1000 / iterations)
                 data['stitch'][domain]['binary_runtime'].append(runtime / iterations)
-
-                assert dc_processed['metrics']['compression_ratio_min'] == dc_invs['metrics']['compression_ratio_min']
 
                 data['dreamcoder'][domain]['compression_ratio_min'].append(dc_processed['metrics']['compression_ratio_min'])
                 data['dreamcoder'][domain]['mem_peak_kb'].append(dc_processed['metrics']['mem_peak_kb'])
