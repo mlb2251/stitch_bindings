@@ -102,7 +102,7 @@ def rewrite(
     :type programs: List[str]
     :param abstractions: A list of Abstraction objects to rewrite with.
     :type abstractions: List[Abstraction]
-    :param \**kwargs: Additional arguments to pass to the Rust backend. These are the same as :ref:`compress_kwargs` since rewriting performs a form of compression under the hood, however most are not relevant to rewriting.
+    :param \**kwargs: Additional arguments to pass to the Rust backend. Only the following cost-related arguments from :ref:`compress_kwargs` can be used: ``cost_app``, ``cost_ivar``, ``cost_lam``, ``cost_prim_default``, and ``cost_var``.
     :raises StitchException: If the Rust backend panics.
     :raises TypeError: If the wrong types are provided for arguments.
     :return: A list of rewritten programs.

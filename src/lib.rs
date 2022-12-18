@@ -57,7 +57,7 @@ fn rewrite_backend(
         std::panic::set_hook(Box::new(|_| {}));
     }
 
-    let cfg = match CompressionStepConfig::try_parse_from(format!("compress {args}").split_whitespace()) {
+    let cfg = match CostConfig::try_parse_from(format!("compress {args}").split_whitespace()) {
         Ok(cfg) => cfg,
         Err(e) => panic!("Error parsing arguments: {}", e),
     };
