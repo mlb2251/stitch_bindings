@@ -857,19 +857,34 @@ if __name__ == '__main__':
                     if len(ydata) > 0:
                         ydatas.append(ydata)
                         included_domains.append(domain)
+
+                
+                xticks = [{
+                    'logo':'LOGO',
+                    'towers':'Towers',
+                    'list': 'Lists',
+                    'text': 'Text',
+                    'physics': 'Physics',
+                }[name] for name in included_domains]
+
                 if len(ydatas) != 0:
-                    ax.violinplot(ydatas)
-                    plt.axhline(y=1, color='b', linewidth=1, linestyle='dashed')
-
-                    xticks = [{
-                        'logo':'LOGO',
-                        'towers':'Towers',
-                        'list': 'Lists',
-                        'text': 'Text',
-                        'physics': 'Physics',
-                    }[name] for name in included_domains]
-
-                    plt.xticks(list(range(1,len(xticks)+1)), xticks)
+                    if False:
+                        # this is the code for if you just want the paper violin plots
+                        ax.violinplot(ydatas)
+                        plt.xticks(list(range(1,len(xticks)+1)), xticks)
+                    if False:
+                        # this is the code for if you want to see that paper violin plot overlayed with the swarm plot,
+                        # except the offsets are weird and gross
+                        ax.violinplot(ydatas)
+                        sns.swarmplot([[]] + ydatas, ax=ax, color='black')
+                        plt.xticks(list(range(1,len(xticks)+1)), xticks)
+                    if True:
+                        # just the swarm plot
+                        sns.swarmplot(ydatas, ax=ax, palette='flare')
+                        # palette=sns.dark_palette("#69d", reverse=True)
+                        # sns.swarmplot(ydatas, ax=ax, palette=sns.color_palette("rocket"))
+                        plt.axhline(y=1, color='b', linewidth=1, linestyle='dashed')
+                        plt.xticks(list(range(len(xticks))), xticks)
 
 
             # set y axis to start at 1
