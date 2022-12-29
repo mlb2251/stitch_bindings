@@ -23,6 +23,11 @@ clean:
 kwargs:
 	cd scripts && ${PYTHON} gen_kwargs_listing.py > ../docs/source/generated_kwargs_table.rst
 
+publish-test:
+	make all
+	${PYTHON} -m maturin publish --repository testpypi
+	${PYTHON} -m pip install -i https://test.pypi.org/simple/ stitch-core --upgrade
+
 claim-1:
 	cd experiments && make claim-1
 
