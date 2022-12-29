@@ -31,7 +31,7 @@ fn compress_backend(
     
     // release the GIL and call compression
     let (_step_results, json_res) = py.allow_threads(||
-        multistep_compression(&programs, tasks, anonymous_to_named, &cfg)
+        multistep_compression(&programs, tasks, anonymous_to_named, None, &cfg)
     );
 
     // return as something you could json.loads(out) from in python
@@ -50,7 +50,7 @@ fn rewrite_backend(
     abstractions: Vec<&PyAny>,
     panic_loud: bool,
     args: String,
-) -> PyResult<Vec<String>> {
+) -> PyResult<(Vec<String>, String)> {
 
     // disable the printing of panics, so that the only panic we see is the one that gets passed along in an Exception to Python
     if !panic_loud{
@@ -61,14 +61,6 @@ fn rewrite_backend(
         Ok(cfg) => cfg,
         Err(e) => panic!("Error parsing arguments: {}", e),
     };
-
-
-    let programs: Vec<ExprOwned> = programs.iter().map(|p| {
-        let mut set = ExprSet::empty(Order::ChildFirst, false, false);
-        let idx = set.parse_extend(p).unwrap();
-        ExprOwned::new(set,idx)
-        }
-    ).collect();
 
     let abstractions = abstractions.iter().map(|a| {
         let mut set = ExprSet::empty(Order::ChildFirst, false, false);
@@ -82,14 +74,12 @@ fn rewrite_backend(
     ).collect::<PyResult<Vec<_>>>()?;
     
     // release the GIL and call rewriting
-    let rewritten = py.allow_threads(||
+    let (rewritten, _step_results, json_res) = py.allow_threads(||
         rewrite_with_inventions(&programs, &abstractions, &cfg)
     );
 
-    let res = rewritten.iter().map(|s| s.to_string()).collect();
-
     // return as something you could json.loads(out) from in python
-    Ok(res)
+    Ok((rewritten, json_res.to_string()))
 }
 
 

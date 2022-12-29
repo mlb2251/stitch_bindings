@@ -42,6 +42,19 @@ class CompressionResult:
         self.rewritten: List[str] = json['rewritten']
         self.json = json
 
+class RewriteResult:
+    """
+    The result of calling rewrite().
+
+    :param rewritten: a list of programs, where each program has been rewritten using the abstractions
+    :type rewritten: List[str]
+    :param json: the raw JSON output from the Rust backend, containing lots of additional information
+    :type json: Dict[str,Any]
+    """
+    def __init__(self, json: Dict[str,Any]):
+        self.rewritten: List[str] = json['rewritten']
+        self.json = json
+
 
 def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
     """
@@ -89,11 +102,58 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
         rewritten_dreamcoder=True,
     )
 
+def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
+    """
+    Takes a dreamcoder-style json dictionary and returns a dictionary of arguments to pass as kwargs to stitch.compress().
+
+    The following keys will be in the returned dictionary:
+     - `anonymous_to_named`: This is a mapping from anonymous abstractions to named abstractions, for example from "#(lambda (+ $0 2))" to "fn_2", since
+       DreamCoder operates over anonymous abstractions while Stitch operates over named ones. Since there isn't a canonical ordering to the anonymous
+       abstractions in a dreamcoder-style json, this function will sort them by length and use that as the ordering, since this has the property that
+       abstractions used within larger abstractions will be named first.
+     - `programs`: These are the programs translated from anonymous format to named format
+     - `tasks`: These are the tasks associated with each program, since DreamCoder has a concept of tasks. See also :ref:`compression_objectives`.
+     - `rewritten_dreamcoder=True`: This is a flag that tells compress() to return the dreamcoder-formatted programs in the `.json["rewritten_dreamcoder]` fied of its output.
+
+    :param json: A dreamcoder-style json dictionary.
+    :type json: Dict[str,Any]
+    :return: A dictionary of arguments to pass as kwargs to stitch.compress().
+    :rtype: Dict[str,Any]
+    """
+
+    frontiers = json["frontiers"]
+    anonymous_abstractions = [production["expression"] for production in json["DSL"]["productions"] if production["expression"].startswith("#")]
+    anonymous_abstractions.sort(key=len)
+    anonymous_to_named = [(f"dreamcoder_abstraction_{i}", anonymous) for (i,anonymous) in enumerate(anonymous_abstractions)]
+
+    programs = []
+    tasks = []
+    for i, frontier in enumerate(frontiers):
+        task = frontier.get("task", str(i))
+        for program in frontier["programs"]:
+            program = program["program"]
+            # replace #(lambda ...) with fn_2 etc. Start with highest numbered fn to avoid mangling bodies of other fns.
+            for (name, anonymous) in reversed(anonymous_to_named):
+                program = program.replace(anonymous, name)
+            assert '#' not in program
+            # replace "lambda" with "lam". Note that lambdas always appear with parens to their left and a space to their right
+            program = program.replace("(lambda ", "(lam ")
+            programs.append(program)
+            tasks.append(task)
+
+    return dict(
+        programs=programs,
+        tasks=tasks,
+        anonymous_to_named=anonymous_to_named,
+        rewritten_dreamcoder=True,
+    )
+
+
 def rewrite(
     programs: List[str],
     abstractions: List[Abstraction],
     **kwargs
-    ) -> List[str]:
+    ) -> RewriteResult:
     """
     Rewrites a set of programs with a list of abstractions. Rewrites first with abstractions[0],
     then abstractions[1], etc. Will not perform a rewrite if it is not compressive.
@@ -105,8 +165,8 @@ def rewrite(
     :param \**kwargs: Additional arguments to pass to the Rust backend. Only the following cost-related arguments from :ref:`compress_kwargs` can be used: ``cost_app``, ``cost_ivar``, ``cost_lam``, ``cost_prim_default``, and ``cost_var``.
     :raises StitchException: If the Rust backend panics.
     :raises TypeError: If the wrong types are provided for arguments.
-    :return: A list of rewritten programs.
-    :rtype: List[str]
+    :return: A RewriteResult containing the list of rewritten programs and other relevant information
+    :rtype: RewriteResult
     """
 
     panic_loud = kwargs.pop('panic_loud',False)
@@ -114,12 +174,15 @@ def rewrite(
     args = " ".join([build_arg(k, v) for k, v in kwargs.items()])
 
     try:
-        return rewrite_backend(
+        (rewritten,json_res) = rewrite_backend(
             programs,
             abstractions,
             panic_loud,
             args
         )
+        json_res = json.loads(json_res)
+        assert json_res["rewritten"] == rewritten
+        return RewriteResult(json_res)
     except BaseException as e:
         if e.__class__.__name__ == "PanicException":
             raise StitchException(f"Rust backend panicked with exception: {e}")
