@@ -26,7 +26,8 @@ kwargs:
 publish-test:
 	make all
 	${PYTHON} -m maturin publish --repository testpypi
-	${PYTHON} -m pip install -i https://test.pypi.org/simple/ stitch-core --upgrade
+	${PYTHON} -m pip uninstall stitch_core
+	${PYTHON} -m pip install -i https://test.pypi.org/simple/ stitch-core
 
 claim-1:
 	cd experiments && make claim-1
