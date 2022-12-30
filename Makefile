@@ -11,6 +11,9 @@ build:
 install:
 	${PYTHON} -m pip install .
 
+install-x86-64:
+        ARCHFLAGS="-arch x86_64" pip install . --compile --no-cache-dir
+
 osx-setup:
 	rustup target add aarch64-apple-darwin
 	rustup target add x86_64-apple-darwin
