@@ -6,7 +6,7 @@ all: build install test docs
 
 build:
 	${PYTHON} -m pip install maturin --upgrade
-	${PYTHON} -m maturin build --release -i ${PYTHON}
+	${PYTHON} -m maturin build --release -i ${PYTHON} --universal2
 
 install:
 	${PYTHON} -m pip install .
