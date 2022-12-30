@@ -11,6 +11,10 @@ build:
 install:
 	${PYTHON} -m pip install .
 
+osx-setup:
+	rustup target add aarch64-apple-darwin
+	rustup target add x86_64-apple-darwin
+
 test:
 	cd tests && ${PYTHON} test.py
 
