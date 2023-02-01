@@ -1,5 +1,7 @@
 .PHONY: claim-2 clean claim-1 clean-plots clean-benchmark
 
+
+
 # CLAIM 1
 
 clean: clean-benchmark clean-plots
@@ -7,7 +9,7 @@ clean: clean-benchmark clean-plots
 	echo "cleaned all outputs"
 
 clean-plots:
-	rm plots/*
+	rm -f plots/*
 
 
 claim-1: compression_benchmark clean-plots

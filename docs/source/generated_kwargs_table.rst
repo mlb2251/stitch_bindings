@@ -35,6 +35,11 @@
             https://arxiv.org/abs/2211.16605
         * - ``dynamic_batch``
           - Threads will autoadjust how large their batches are based on the worklist size
+        * - ``eta_long``
+          - Puts result into eta-long form when rewriting (also requires beta-normal form). This can
+            be useful for programs that will be used to train top down synthesizers, but it also
+            restricts what abstractions can be found a bit (i.e. only those that can be put in
+            beta-normal eta-long form are allowed)
         * - ``follow <val>``
           - Pattern or abstraction to follow and give prinouts about. If ``follow_prune=True`` we will
             aggressively prune to only follow this pattern, otherwise we will just verbosely print
