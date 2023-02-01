@@ -57,6 +57,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
+    - run: make osx-setup
     - uses: PyO3/maturin-action@v1
       with:
         command: build
