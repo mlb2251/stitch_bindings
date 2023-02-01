@@ -395,7 +395,7 @@ def claim_2_workload(seed, programs, q: Queue):
         print(f"WARNING: unsure what rusage memory unit is on {sys.platform}, assuming kb")
         mem /= 10**3
 
-    rewritten_train = rewrite(train,res.abstractions, panic_loud=False, silent=False, max_arity=3)
+    rewritten_train = rewrite(train,res.abstractions, panic_loud=False, silent=False)
     assert rewritten_train == res.rewritten
 
     q.put([
@@ -441,17 +441,8 @@ def claim_1_workload(compress_kwargs, q: Queue):
 
 if __name__ == '__main__':
     mode = sys.argv[1]
-    if mode == 'dsl':
-        save(to_stitch_dsl(load(sys.argv[2])), sys.argv[3])
-
-    elif mode == 'diff':
-        input_dsl = to_stitch_dsl(load(sys.argv[2]))
-        output_dsl = to_stitch_dsl(load(sys.argv[3]))
-        difference = diff(input_dsl,output_dsl)
-        print(f"{len(difference)} new dsl functions in diff")
-        save(difference, sys.argv[4])
     
-    elif mode == 'to_input_files':
+    if mode == 'to_input_files':
         out_path = Path(sys.argv[2])
         in_files = [x['in_file'] for x in load(out_path / 'invention_info' / 'info.json')]
         for i,in_file in enumerate(in_files):
@@ -916,7 +907,7 @@ if __name__ == '__main__':
             os.makedirs('plots', exist_ok=True)
             plt.savefig(f'plots/{metric}.png',dpi=400)
             plt.savefig(f'plots/{metric}.pdf')
-            print(f"wrote to plots/{metric}.png and pdf")
+            print(f"wrote to experiments/plots/{metric}.png and pdf")
 
 
     elif mode == "claim-2":
@@ -1176,7 +1167,7 @@ if __name__ == '__main__':
             os.makedirs('plots', exist_ok=True)
             plt.savefig(f'plots/{benches_dir.name}_{metric}.png',dpi=400)
             plt.savefig(f'plots/{benches_dir.name}_{metric}.pdf')
-            print(f"wrote to plots/{benches_dir.name}_{metric}.png and pdf")
+            print(f"wrote to experiments/plots/{benches_dir.name}_{metric}.png and pdf")
 
 
     elif mode == 'show_usages':
