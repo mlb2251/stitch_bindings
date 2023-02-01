@@ -102,9 +102,11 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
         rewritten_dreamcoder=True,
     )
 
-def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
+def from_dreamcoder(json: Dict[str,Any], eta_long=False) -> Dict[str,Any]:
     """
     Takes a dreamcoder-style json dictionary and returns a dictionary of arguments to pass as kwargs to stitch.compress().
+
+    ** Note that this is temporarily ~ 10x slower
 
     The following keys will be in the returned dictionary:
      - `anonymous_to_named`: This is a mapping from anonymous abstractions to named abstractions, for example from "#(lambda (+ $0 2))" to "fn_2", since
@@ -141,11 +143,14 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
             programs.append(program)
             tasks.append(task)
 
+    extra_args = dict(eta_long=True, no_top_lambda=True, utility_by_rewrite=True) if eta_long else dict()
+
     return dict(
         programs=programs,
         tasks=tasks,
         anonymous_to_named=anonymous_to_named,
         rewritten_dreamcoder=True,
+        **extra_args
     )
 
 
