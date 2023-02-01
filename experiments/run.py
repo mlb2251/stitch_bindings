@@ -760,7 +760,7 @@ if __name__ == '__main__':
                 # load the input json for the benchmark
                 dc_json = load(bench_path)
 
-                eta_long =  "ETA_LONG" in os.environ and bool(os.environ["ETA_LONG"])
+                eta_long =  "ETA_LONG" in os.environ and os.environ["ETA_LONG"] in ['1','true','True','TRUE']
 
                 compress_kwargs = from_dreamcoder(dc_json, eta_long=eta_long)
                 max_arity = dc_json['arity']
