@@ -776,6 +776,22 @@ if __name__ == '__main__':
                     dreamcoder_comparison=True,
                 ))
 
+                # read things from the env of the form STITCH_KWARGS='max_arity=3 eta_long=True' etc
+                if "STITCH_KWARGS" in os.environ:
+                    kwargs = os.environ["STITCH_KWARGS"].split(' ')
+                    for kwarg in kwargs:
+                        if kwarg == '': continue
+                        [k,v] = kwarg.split('=')
+                        try:
+                            v = eval(v,{},{})
+                        except:
+                            pass # if it fails to eval we treat it as a string
+                        compress_kwargs[k] = v
+                
+
+
+
+
                 q = Queue()
                 p = Process(target=claim_1_workload,args=(compress_kwargs,q))
                 p.start()
