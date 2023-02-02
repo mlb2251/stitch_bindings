@@ -47,14 +47,31 @@ for domain in domains:
         
         programs, requests = zip(*progs)
 
+        name_mapping = stitch_core.name_mapping_dreamcoder(j)
+        stitch_programs = stitch_core.dreamcoder_to_stitch(programs,name_mapping)
+
         # run compression
         compress_kwargs = stitch_core.from_dreamcoder(j, eta_long=True)
+
+        assert compress_kwargs['programs'] == stitch_programs
+
         res = stitch_core.compress(max_arity=3, iterations=10, **compress_kwargs)
+
+        name_mapping += stitch_core.name_mapping_stitch(res.json)
 
         rewritten = res.json['rewritten_dreamcoder']
         assert len(rewritten) == len(programs)
+        assert res.json['rewritten_dreamcoder'] == stitch_core.stitch_to_dreamcoder(res.rewritten, name_mapping)
 
         print(f"Found {len(res.abstractions)} abstractions for a compression of {res.json['compression_ratio']:.2f}")
+
+        # ensure rewriting with eta long also does the same
+        compress_kwargs.pop('tasks')
+        compress_kwargs.pop('name_mapping')
+        rw = stitch_core.rewrite(abstractions=res.abstractions, **compress_kwargs)
+
+        assert rw.rewritten == res.rewritten
+        assert res.json['rewritten_dreamcoder'] == stitch_core.stitch_to_dreamcoder(rw.rewritten, name_mapping)
 
         # create a new grammar object
         j2 = deepcopy(j)

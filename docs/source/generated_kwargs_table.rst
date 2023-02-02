@@ -95,8 +95,6 @@
           - Disable stat logging - note that stat logging in multithreading requires taking a mutex
             so it can be a source of slowdown in the massively multithreaded case, hence this flag
             to disable it
-        * - ``no_top_lambda``
-          - Makes it so inventions cant start with a lambda at the top
         * - ``previous_abstractions <val>``
           - Number of previous abstractions that have been found before this round of compression -
             this is used to calculate what the next abstraction name should be - for example if 2
@@ -129,6 +127,9 @@
             temporary solution
         * - ``verbose_best``
           - Prints whenever a new best abstraction is found
+        * - ``verbose_rewrite``
+          - Very verbose when rewriting happens - turns off --silent and --quiet which are usually
+            forced on in rewriting
         * - ``verbose_worklist``
           - Prints every worklist item as it is processed (will slow things down a ton due to
             rendering out expressions)

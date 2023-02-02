@@ -1,6 +1,6 @@
 # import the contents of the Rust library into the Python extension
 from .stitch_core import compress_backend,rewrite_backend
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Tuple, Union
 import json
 
 class StitchException(Exception):
@@ -61,7 +61,7 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
     Takes a dreamcoder-style json dictionary and returns a dictionary of arguments to pass as kwargs to stitch.compress().
 
     The following keys will be in the returned dictionary:
-     - `anonymous_to_named`: This is a mapping from anonymous abstractions to named abstractions, for example from "#(lambda (+ $0 2))" to "fn_2", since
+     - `name_mapping`: This is a mapping from anonymous abstractions to named abstractions, for example from "#(lambda (+ $0 2))" to "fn_2", since
        DreamCoder operates over anonymous abstractions while Stitch operates over named ones. Since there isn't a canonical ordering to the anonymous
        abstractions in a dreamcoder-style json, this function will sort them by length and use that as the ordering, since this has the property that
        abstractions used within larger abstractions will be named first.
@@ -78,7 +78,7 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
     frontiers = json["frontiers"]
     anonymous_abstractions = [production["expression"] for production in json["DSL"]["productions"] if production["expression"].startswith("#")]
     anonymous_abstractions.sort(key=len)
-    anonymous_to_named = [(f"dreamcoder_abstraction_{i}", anonymous) for (i,anonymous) in enumerate(anonymous_abstractions)]
+    name_mapping = [(f"dreamcoder_abstraction_{i}", anonymous) for (i,anonymous) in enumerate(anonymous_abstractions)]
 
     programs = []
     tasks = []
@@ -87,7 +87,7 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
         for program in frontier["programs"]:
             program = program["program"]
             # replace #(lambda ...) with fn_2 etc. Start with highest numbered fn to avoid mangling bodies of other fns.
-            for (name, anonymous) in reversed(anonymous_to_named):
+            for (name, anonymous) in reversed(name_mapping):
                 program = program.replace(anonymous, name)
             assert '#' not in program
             # replace "lambda" with "lam". Note that lambdas always appear with parens to their left and a space to their right
@@ -98,7 +98,7 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
     return dict(
         programs=programs,
         tasks=tasks,
-        anonymous_to_named=anonymous_to_named,
+        name_mapping=name_mapping,
         rewritten_dreamcoder=True,
     )
 
@@ -109,7 +109,7 @@ def from_dreamcoder(json: Dict[str,Any], eta_long=False) -> Dict[str,Any]:
     ** Note that this is temporarily ~ 10x slower
 
     The following keys will be in the returned dictionary:
-     - `anonymous_to_named`: This is a mapping from anonymous abstractions to named abstractions, for example from "#(lambda (+ $0 2))" to "fn_2", since
+     - `name_mapping`: This is a mapping from anonymous abstractions to named abstractions, for example from "#(lambda (+ $0 2))" to "fn_2", since
        DreamCoder operates over anonymous abstractions while Stitch operates over named ones. Since there isn't a canonical ordering to the anonymous
        abstractions in a dreamcoder-style json, this function will sort them by length and use that as the ordering, since this has the property that
        abstractions used within larger abstractions will be named first.
@@ -123,35 +123,88 @@ def from_dreamcoder(json: Dict[str,Any], eta_long=False) -> Dict[str,Any]:
     :rtype: Dict[str,Any]
     """
 
-    frontiers = json["frontiers"]
-    anonymous_abstractions = [production["expression"] for production in json["DSL"]["productions"] if production["expression"].startswith("#")]
-    anonymous_abstractions.sort(key=len)
-    anonymous_to_named = [(f"dreamcoder_abstraction_{i}", anonymous) for (i,anonymous) in enumerate(anonymous_abstractions)]
+    name_mapping = name_mapping_dreamcoder(json)
 
     programs = []
     tasks = []
-    for i, frontier in enumerate(frontiers):
-        task = frontier.get("task", str(i))
+    for i, frontier in enumerate(json["frontiers"]):
         for program in frontier["programs"]:
-            program = program["program"]
-            # replace #(lambda ...) with fn_2 etc. Start with highest numbered fn to avoid mangling bodies of other fns.
-            for (name, anonymous) in reversed(anonymous_to_named):
-                program = program.replace(anonymous, name)
-            assert '#' not in program
-            # replace "lambda" with "lam". Note that lambdas always appear with parens to their left and a space to their right
-            program = program.replace("(lambda ", "(lam ")
-            programs.append(program)
-            tasks.append(task)
+            programs.append(dreamcoder_to_stitch(program["program"], name_mapping))
+            tasks.append(frontier.get("task", str(i)))
 
-    extra_args = dict(eta_long=True, no_top_lambda=True, utility_by_rewrite=True) if eta_long else dict()
+    extra_args = dict() if eta_long else dict()
 
     return dict(
         programs=programs,
         tasks=tasks,
-        anonymous_to_named=anonymous_to_named,
+        name_mapping=name_mapping,
         rewritten_dreamcoder=True,
+        rewritten_intermediates=True,
         **extra_args
     )
+
+def name_mapping_dreamcoder(json: dict) -> List[Tuple[str,str]]:
+    assert "DSL" in json, "This is not a dreamcoder json output file"
+    anonymous_abstractions = [production["expression"] for production in json["DSL"]["productions"] if production["expression"].startswith("#")]
+    anonymous_abstractions.sort(key=len)
+    return [(f"dreamcoder_abstraction_{i}", anonymous) for (i,anonymous) in enumerate(anonymous_abstractions)]
+
+def name_mapping_stitch(json: dict) -> List[Tuple[str,str]]:
+    assert "abstractions" in json, "This is not a stitch json output file"
+    return [(abstraction['name'], abstraction['dreamcoder']) for abstraction in json['abstractions']]
+
+def dreamcoder_to_stitch(program: Union[str,List[str]], name_mapping: List[Tuple[str,str]]):
+    if isinstance(program,(list,tuple)):
+        return [dreamcoder_to_stitch(p, name_mapping) for p in program]
+
+    # replace #(lambda ...) with fn_2 etc. Start with highest numbered fn to avoid mangling bodies of other fns.
+    for (name, anonymous) in reversed(name_mapping):
+        program = program.replace(anonymous, name)
+    assert '#' not in program
+    # replace "lambda" with "lam". Note that lambdas always appear with parens to their left and a space to their right
+    program = program.replace("(lambda ", "(lam ")
+    return program
+
+def stitch_to_dreamcoder(program: Union[str,List[str]], name_mapping: List[Tuple[str,str]]):
+    if isinstance(program,(list,tuple)):
+        return [stitch_to_dreamcoder(p, name_mapping) for p in program]
+
+    # replace lam with lambda
+    program = program.replace("(lam ", "(lambda ")
+
+    # ordering here doesnt matter because replace_prim() is precise enough to not mistake
+    # fn_10 for being fn_1 etc
+    for (name, anonymous) in reversed(name_mapping):
+        program = replace_prim(program, name, anonymous)
+    
+    return program
+
+def replace_prim(program: str, prim: str, new: str) -> str:
+
+    program = program.replace(f" {prim})", f" {new})")
+    program = program.replace(f"({prim} ", f"({new} ")
+
+    # we need to do the " {} " case twice to handle multioverlaps like fn_i fn_i fn_i fn_i which will replace at locations 1 and 3
+    # in the first replace() and 2 and 4 in the second replace due to overlapping matches.
+    program = program.replace(f" {prim} ", f" {new} ").replace(f" {prim} ", f" {new} ")
+
+    # obscure case where entire proram is just the prim
+    if program == prim:
+        program = new
+
+    # these cases are impossible because any applications must be wrapped in parens,
+    # so lets just make sure they dont show up
+    assert not program.startswith(f"{prim} ")
+    assert not program.endswith(f" {prim}")
+
+    # check that we've replaced all the cases
+    assert f" {prim} " not in program
+    assert f"({prim} " not in program
+    assert f" {prim})" not in program
+    assert f"{prim}" != program # case where entire program is just the primitive
+    return program
+
+
 
 
 def rewrite(
@@ -229,7 +282,7 @@ def compress(
     """
 
     tasks = kwargs.pop("tasks", None)
-    anonymous_to_named = kwargs.pop("anonymous_to_named", None)
+    name_mapping = kwargs.pop("name_mapping", None)
     panic_loud = kwargs.pop('panic_loud',False)
 
     kwargs.update(dict(
@@ -245,7 +298,7 @@ def compress(
         res = compress_backend(
             programs,
             tasks,
-            anonymous_to_named,
+            name_mapping,
             panic_loud,
             args)
     except BaseException as e:

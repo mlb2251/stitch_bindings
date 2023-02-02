@@ -382,15 +382,13 @@ def claim_2_workload(seed, programs, q: Queue):
     # with open('tmp_test.json','w') as f:
     #     json.dump(test,f,indent=4)
 
-    compress_kwargs = dict(
-        programs=train, max_arity=3, iterations=10
-    )
+    compress_kwargs = dict(max_arity=3, iterations=10)
 
     include_env_stitch_kwargs(compress_kwargs)
 
     tstart = time.time()
-    res = compress(**compress_kwargs)
-    rewritten = rewrite(test,res.abstractions, panic_loud=False, silent=False)
+    res = compress(train, **compress_kwargs)
+    rewritten = rewrite(test, res.abstractions, **compress_kwargs)
     runtime = time.time() - tstart
     mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     if sys.platform == 'darwin':
@@ -401,7 +399,7 @@ def claim_2_workload(seed, programs, q: Queue):
         print(f"WARNING: unsure what rusage memory unit is on {sys.platform}, assuming kb")
         mem /= 10**3
 
-    rewritten_train = rewrite(train, res.abstractions, panic_loud=False, silent=False)
+    rewritten_train = rewrite(train, res.abstractions, silent=False, **compress_kwargs)
     assert rewritten_train.rewritten == res.rewritten
 
     q.put([
@@ -951,7 +949,7 @@ if __name__ == '__main__':
             'wheels': 'vehicles',
             'house': 'houses',
         }
-        domains = ['nuts-bolts', 'dials', 'furniture', 'wheels', 'bridge', 'city', 'castle', 'house']
+        domains = ['nuts-bolts', 'dials', 'furniture', 'wheels'] #+ ['bridge', 'city', 'castle', 'house']
 
         table = PrettyTable(['Domain', 'Training set C.R.', 'Test set C.R.', 'Runtime (s)', 'Peak mem. usage (MB)'])
 

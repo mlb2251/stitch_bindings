@@ -114,7 +114,8 @@ Loading from `this file <https://github.com/mlb2251/stitch_bindings/blob/main/da
 fn_0(#0,#1,#2) := (if (empty? (cdr #0)) #2 (#1 (cdr #0)))
 
 Note that the rewritten results in ``res.rewritten`` are in Stitch format, but DreamCoder format can
-be found in ``res.json["rewritten_dreamcoder"]``. Additionally, ``res.json["abstractions"][i]["dreamcoder"]`` contains the
+be found in ``res.json["rewritten_dreamcoder"]`` as long as ``rewritten_dreamcoder=True`` is passed
+as an argument to compress() or rewrite(). Additionally, ``res.json["abstractions"][i]["dreamcoder"]`` contains the
 body of the i-th abstraction in DreamCoder format.
 
 Catching a StitchException

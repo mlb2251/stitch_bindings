@@ -7,14 +7,14 @@ use clap::Parser;
 #[pyfunction(
     programs,
     tasks,
-    anonymous_to_named,
+    name_mapping,
     args
 )]
 fn compress_backend(
     py: Python,
     programs: Vec<String>,
     tasks: Option<Vec<String>>,
-    anonymous_to_named: Option<Vec<(String,String)>>,
+    name_mapping: Option<Vec<(String,String)>>,
     panic_loud: bool,
     args: String,
 ) -> PyResult<String> {
@@ -31,7 +31,7 @@ fn compress_backend(
     
     // release the GIL and call compression
     let (_step_results, json_res) = py.allow_threads(||
-        multistep_compression(&programs, tasks, anonymous_to_named, None, &cfg)
+        multistep_compression(&programs, tasks, name_mapping, None, &cfg)
     );
 
     // return as something you could json.loads(out) from in python
@@ -57,10 +57,12 @@ fn rewrite_backend(
         std::panic::set_hook(Box::new(|_| {}));
     }
 
-    let cfg = match CostConfig::try_parse_from(format!("compress {args}").split_whitespace()) {
+    let cfg = match MultistepCompressionConfig::try_parse_from(format!("compress {args}").split_whitespace()) {
         Ok(cfg) => cfg,
         Err(e) => panic!("Error parsing arguments: {}", e),
     };
+
+
 
     let abstractions = abstractions.iter().map(|a| {
         let mut set = ExprSet::empty(Order::ChildFirst, false, false);
@@ -77,6 +79,7 @@ fn rewrite_backend(
     let (rewritten, _step_results, json_res) = py.allow_threads(||
         rewrite_with_inventions(&programs, &abstractions, &cfg)
     );
+
 
     // return as something you could json.loads(out) from in python
     Ok((rewritten, json_res.to_string()))
