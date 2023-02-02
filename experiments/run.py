@@ -382,8 +382,14 @@ def claim_2_workload(seed, programs, q: Queue):
     # with open('tmp_test.json','w') as f:
     #     json.dump(test,f,indent=4)
 
+    compress_kwargs = dict(
+        programs=train, max_arity=3, iterations=10
+    )
+
+    include_env_stitch_kwargs(compress_kwargs)
+
     tstart = time.time()
-    res = compress(train, max_arity=3, iterations=10)
+    res = compress(**compress_kwargs)
     rewritten = rewrite(test,res.abstractions, panic_loud=False, silent=False)
     runtime = time.time() - tstart
     mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
@@ -395,12 +401,12 @@ def claim_2_workload(seed, programs, q: Queue):
         print(f"WARNING: unsure what rusage memory unit is on {sys.platform}, assuming kb")
         mem /= 10**3
 
-    rewritten_train = rewrite(train,res.abstractions, panic_loud=False, silent=False)
-    assert rewritten_train == res.rewritten
+    rewritten_train = rewrite(train, res.abstractions, panic_loud=False, silent=False)
+    assert rewritten_train.rewritten == res.rewritten
 
     q.put([
         corpus_size(train,[]) / corpus_size(res.rewritten,[]), # we dont include abstraction size in these experiments
-        corpus_size(test,[]) / corpus_size(rewritten,[]),
+        corpus_size(test,[]) / corpus_size(rewritten.rewritten,[]),
         runtime,
         mem
     ])
@@ -438,6 +444,19 @@ def claim_1_workload(compress_kwargs, q: Queue):
         runtime_internal,
         mem
     ])
+
+def include_env_stitch_kwargs(compress_kwargs):
+    """read things from the env of the form STITCH_KWARGS='max_arity=3 eta_long=True' etc"""
+    if "STITCH_KWARGS" in os.environ:
+        kwargs = os.environ["STITCH_KWARGS"].split(' ')
+        for kwarg in kwargs:
+            if kwarg == '': continue
+            [k,v] = kwarg.split('=')
+            try:
+                v = eval(v,{},{})
+            except:
+                pass # if it fails to eval we treat it as a string
+            compress_kwargs[k] = v
 
 if __name__ == '__main__':
     mode = sys.argv[1]
@@ -781,21 +800,7 @@ if __name__ == '__main__':
                     dreamcoder_comparison=True,
                 ))
 
-                # read things from the env of the form STITCH_KWARGS='max_arity=3 eta_long=True' etc
-                if "STITCH_KWARGS" in os.environ:
-                    kwargs = os.environ["STITCH_KWARGS"].split(' ')
-                    for kwarg in kwargs:
-                        if kwarg == '': continue
-                        [k,v] = kwarg.split('=')
-                        try:
-                            v = eval(v,{},{})
-                        except:
-                            pass # if it fails to eval we treat it as a string
-                        compress_kwargs[k] = v
-                
-
-
-
+                include_env_stitch_kwargs(compress_kwargs)
 
                 q = Queue()
                 p = Process(target=claim_1_workload,args=(compress_kwargs,q))
