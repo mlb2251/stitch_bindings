@@ -51,11 +51,15 @@ for domain in domains:
         stitch_programs = stitch_core.dreamcoder_to_stitch(programs,name_mapping)
 
         # run compression
-        compress_kwargs = stitch_core.from_dreamcoder(j, eta_long=True)
+        kwargs = stitch_core.from_dreamcoder(j)
+        kwargs.update(dict(
+            eta_long=True,
+            utility_by_rewrite=True
+        ))
 
-        assert compress_kwargs['programs'] == stitch_programs
+        assert kwargs['programs'] == stitch_programs
 
-        res = stitch_core.compress(max_arity=3, iterations=10, **compress_kwargs)
+        res = stitch_core.compress(max_arity=3, iterations=10, **kwargs)
 
         name_mapping += stitch_core.name_mapping_stitch(res.json)
 
@@ -66,9 +70,8 @@ for domain in domains:
         print(f"Found {len(res.abstractions)} abstractions for a compression of {res.json['compression_ratio']:.2f}")
 
         # ensure rewriting with eta long also does the same
-        compress_kwargs.pop('tasks')
-        compress_kwargs.pop('name_mapping')
-        rw = stitch_core.rewrite(abstractions=res.abstractions, **compress_kwargs)
+        # importantly pass in **kwargs here too!
+        rw = stitch_core.rewrite(abstractions=res.abstractions, **kwargs)
 
         assert rw.rewritten == res.rewritten
         assert res.json['rewritten_dreamcoder'] == stitch_core.stitch_to_dreamcoder(rw.rewritten, name_mapping)

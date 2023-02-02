@@ -102,7 +102,7 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
         rewritten_dreamcoder=True,
     )
 
-def from_dreamcoder(json: Dict[str,Any], eta_long=False) -> Dict[str,Any]:
+def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
     """
     Takes a dreamcoder-style json dictionary and returns a dictionary of arguments to pass as kwargs to stitch.compress().
 
@@ -132,15 +132,11 @@ def from_dreamcoder(json: Dict[str,Any], eta_long=False) -> Dict[str,Any]:
             programs.append(dreamcoder_to_stitch(program["program"], name_mapping))
             tasks.append(frontier.get("task", str(i)))
 
-    extra_args = dict() if eta_long else dict()
-
     return dict(
         programs=programs,
         tasks=tasks,
         name_mapping=name_mapping,
-        rewritten_dreamcoder=True,
-        rewritten_intermediates=True,
-        **extra_args
+        rewritten_dreamcoder=True
     )
 
 def name_mapping_dreamcoder(json: dict) -> List[Tuple[str,str]]:
@@ -226,6 +222,10 @@ def rewrite(
     :return: A RewriteResult containing the list of rewritten programs and other relevant information
     :rtype: RewriteResult
     """
+
+    # pop these just so we're compatible with all the same kwargs as compress
+    kwargs.pop("tasks", None)
+    kwargs.pop("name_mapping", None)
 
     panic_loud = kwargs.pop('panic_loud',False)
 
