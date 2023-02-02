@@ -42,4 +42,7 @@ claim-1:
 claim-2:
 	cd experiments && make claim-2 SEEDS=${SEEDS}
 
+eta-long:
+	cd experiments && make eta-long
+
 .PHONY: all build install test docs clean claim-1 claim-2
