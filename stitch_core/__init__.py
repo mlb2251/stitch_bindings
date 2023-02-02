@@ -55,74 +55,21 @@ class RewriteResult:
         self.rewritten: List[str] = json['rewritten']
         self.json = json
 
-
 def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
     """
-    Takes a dreamcoder-style json dictionary and returns a dictionary of arguments to pass as kwargs to stitch.compress().
+    Takes a dreamcoder-style json dictionary and returns a dictionary of arguments to pass as kwargs to compress() or rewrite().
 
     The following keys will be in the returned dictionary:
-     - `name_mapping`: This is a mapping from anonymous abstractions to named abstractions, for example from "#(lambda (+ $0 2))" to "fn_2", since
-       DreamCoder operates over anonymous abstractions while Stitch operates over named ones. Since there isn't a canonical ordering to the anonymous
-       abstractions in a dreamcoder-style json, this function will sort them by length and use that as the ordering, since this has the property that
-       abstractions used within larger abstractions will be named first.
-     - `programs`: These are the programs translated from anonymous format to named format
+     - `name_mapping`: see name_mapping_dreamcoder()
+     - `programs`: These are the programs translated from dreamcoder format to stitch format, see dreamcoder_to_stitch()
      - `tasks`: These are the tasks associated with each program, since DreamCoder has a concept of tasks. See also :ref:`compression_objectives`.
      - `rewritten_dreamcoder=True`: This is a flag that tells compress() to return the dreamcoder-formatted programs in the `.json["rewritten_dreamcoder]` fied of its output.
 
     :param json: A dreamcoder-style json dictionary.
     :type json: Dict[str,Any]
-    :return: A dictionary of arguments to pass as kwargs to stitch.compress().
+    :return: A dictionary of arguments to pass as kwargs to compress() or rewrite()
     :rtype: Dict[str,Any]
     """
-
-    frontiers = json["frontiers"]
-    anonymous_abstractions = [production["expression"] for production in json["DSL"]["productions"] if production["expression"].startswith("#")]
-    anonymous_abstractions.sort(key=len)
-    name_mapping = [(f"dreamcoder_abstraction_{i}", anonymous) for (i,anonymous) in enumerate(anonymous_abstractions)]
-
-    programs = []
-    tasks = []
-    for i, frontier in enumerate(frontiers):
-        task = frontier.get("task", str(i))
-        for program in frontier["programs"]:
-            program = program["program"]
-            # replace #(lambda ...) with fn_2 etc. Start with highest numbered fn to avoid mangling bodies of other fns.
-            for (name, anonymous) in reversed(name_mapping):
-                program = program.replace(anonymous, name)
-            assert '#' not in program
-            # replace "lambda" with "lam". Note that lambdas always appear with parens to their left and a space to their right
-            program = program.replace("(lambda ", "(lam ")
-            programs.append(program)
-            tasks.append(task)
-
-    return dict(
-        programs=programs,
-        tasks=tasks,
-        name_mapping=name_mapping,
-        rewritten_dreamcoder=True,
-    )
-
-def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
-    """
-    Takes a dreamcoder-style json dictionary and returns a dictionary of arguments to pass as kwargs to stitch.compress().
-
-    ** Note that this is temporarily ~ 10x slower
-
-    The following keys will be in the returned dictionary:
-     - `name_mapping`: This is a mapping from anonymous abstractions to named abstractions, for example from "#(lambda (+ $0 2))" to "fn_2", since
-       DreamCoder operates over anonymous abstractions while Stitch operates over named ones. Since there isn't a canonical ordering to the anonymous
-       abstractions in a dreamcoder-style json, this function will sort them by length and use that as the ordering, since this has the property that
-       abstractions used within larger abstractions will be named first.
-     - `programs`: These are the programs translated from anonymous format to named format
-     - `tasks`: These are the tasks associated with each program, since DreamCoder has a concept of tasks. See also :ref:`compression_objectives`.
-     - `rewritten_dreamcoder=True`: This is a flag that tells compress() to return the dreamcoder-formatted programs in the `.json["rewritten_dreamcoder]` fied of its output.
-
-    :param json: A dreamcoder-style json dictionary.
-    :type json: Dict[str,Any]
-    :return: A dictionary of arguments to pass as kwargs to stitch.compress().
-    :rtype: Dict[str,Any]
-    """
-
     name_mapping = name_mapping_dreamcoder(json)
 
     programs = []
@@ -140,16 +87,36 @@ def from_dreamcoder(json: Dict[str,Any]) -> Dict[str,Any]:
     )
 
 def name_mapping_dreamcoder(json: dict) -> List[Tuple[str,str]]:
-    assert "DSL" in json, "This is not a dreamcoder json output file"
+    """
+    Takes a dreamcoder-style json dictionary and returns a list of tuples of the form (name, anonymous_abstraction)
+    where name is the name of the abstraction (like "fn_0") and anonymous_abstraction is the dreamcoder-format 
+    anonymous abstraction like "#(lambda (foo (#(lambda bar $0))))". This is useful for translating back and forth
+    between dreamcoder and stitch formats in conjunction with dreamcoder_to_stitch() and stitch_to_dreamcoder().
+
+    Note that name mappings can be added together but must always be ordered such that later abstractions are later
+    in the list, so that they don't accidentally get mangled by earlier abstractions during dreamcoder_to_stitch().
+
+    This function sorts the abstractions by length, so that longer abstractions are later in the list which will avoid
+    the mangling problem as well.
+    """
+    assert "DSL" in json, "This is not a dreamcoder json output"
     anonymous_abstractions = [production["expression"] for production in json["DSL"]["productions"] if production["expression"].startswith("#")]
     anonymous_abstractions.sort(key=len)
     return [(f"dreamcoder_abstraction_{i}", anonymous) for (i,anonymous) in enumerate(anonymous_abstractions)]
 
 def name_mapping_stitch(json: dict) -> List[Tuple[str,str]]:
-    assert "abstractions" in json, "This is not a stitch json output file"
+    """
+    Same as name_mapping_dreamcoder() but when starting from a stitch output json, such as the .json
+    field of CompressionResult.
+    """
+    assert "abstractions" in json, "This is not a stitch json output"
     return [(abstraction['name'], abstraction['dreamcoder']) for abstraction in json['abstractions']]
 
 def dreamcoder_to_stitch(program: Union[str,List[str]], name_mapping: List[Tuple[str,str]]):
+    """
+    Translates a program or list of programs from dreamcoder format to stitch format using the name_mapping
+    obtained from name_mapping_dreamcoder() or name_mapping_stitch().
+    """
     if isinstance(program,(list,tuple)):
         return [dreamcoder_to_stitch(p, name_mapping) for p in program]
 
@@ -162,6 +129,11 @@ def dreamcoder_to_stitch(program: Union[str,List[str]], name_mapping: List[Tuple
     return program
 
 def stitch_to_dreamcoder(program: Union[str,List[str]], name_mapping: List[Tuple[str,str]]):
+    """
+    Translates a program or list of programs from stitch format to dreamcoder format using the name_mapping
+    obtained from name_mapping_dreamcoder() or name_mapping_stitch().
+    """
+
     if isinstance(program,(list,tuple)):
         return [stitch_to_dreamcoder(p, name_mapping) for p in program]
 
@@ -176,7 +148,12 @@ def stitch_to_dreamcoder(program: Union[str,List[str]], name_mapping: List[Tuple
     return program
 
 def replace_prim(program: str, prim: str, new: str) -> str:
-
+    """
+    Replaces all instances of `prim` in `program` with `new`. We use this when prim is something
+    like "fn_1" and new is something like "#(lambda (foo (#(lambda bar $0))))" and we want to be
+    careful not to mangle something like "fn_10" or "some_fn_1" which would get mangled if we naively
+    did a string replace.
+    """
     program = program.replace(f" {prim})", f" {new})")
     program = program.replace(f"({prim} ", f"({new} ")
 
@@ -200,9 +177,6 @@ def replace_prim(program: str, prim: str, new: str) -> str:
     assert f"{prim}" != program # case where entire program is just the primitive
     return program
 
-
-
-
 def rewrite(
     programs: List[str],
     abstractions: List[Abstraction],
@@ -212,7 +186,7 @@ def rewrite(
     Rewrites a set of programs with a list of abstractions. Rewrites first with abstractions[0],
     then abstractions[1], etc. Will not perform a rewrite if it is not compressive.
 
-    :param programs: A list of programs to rewrite.
+    :param programs: A list of programs to rewrite in stitch format. See dreamcoder_to_stitch() or from_dreamcoder() for translating to this format from dreamcoder.
     :type programs: List[str]
     :param abstractions: A list of Abstraction objects to rewrite with.
     :type abstractions: List[Abstraction]
@@ -240,6 +214,13 @@ def rewrite(
         )
         json_res = json.loads(json_res)
         assert json_res["rewritten"] == rewritten
+
+        # since we have no way to pass a name_mapping to the backend, these results will be
+        # mangled so to save people the pain lets just pop them off for now
+        json_res.pop("rewritten_dreamcoder")
+        for a in json_res["abstractions"]:
+            a.pop("rewritten_dreamcoder")
+
         return RewriteResult(json_res)
     except BaseException as e:
         if e.__class__.__name__ == "PanicException":
@@ -264,7 +245,7 @@ def compress(
 
     Learned abstractions can call earlier abstractions that were learned, thus building up a hierarchy of increasingly complex abstractions.
 
-    :param programs: A list of programs to learn abstractions from.
+    :param programs: A list of programs to learn abstractions from in stitch format. See dreamcoder_to_stitch() or from_dreamcoder() for translating to this format from dreamcoder.
     :type programs: List[str]
     :param iterations: The maximum number of iterations to run abstraction learning for.
     :type iterations: int

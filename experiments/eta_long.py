@@ -47,9 +47,6 @@ for domain in domains:
         
         programs, requests = zip(*progs)
 
-        name_mapping = stitch_core.name_mapping_dreamcoder(j)
-        stitch_programs = stitch_core.dreamcoder_to_stitch(programs,name_mapping)
-
         # run compression
         kwargs = stitch_core.from_dreamcoder(j)
         kwargs.update(dict(
@@ -57,24 +54,30 @@ for domain in domains:
             utility_by_rewrite=True
         ))
 
-        assert kwargs['programs'] == stitch_programs
+        assert kwargs['programs'] == stitch_core.dreamcoder_to_stitch(programs,stitch_core.name_mapping_dreamcoder(j))
 
         res = stitch_core.compress(max_arity=3, iterations=10, **kwargs)
 
-        name_mapping += stitch_core.name_mapping_stitch(res.json)
-
         rewritten = res.json['rewritten_dreamcoder']
         assert len(rewritten) == len(programs)
-        assert res.json['rewritten_dreamcoder'] == stitch_core.stitch_to_dreamcoder(res.rewritten, name_mapping)
+
+        # here's an example of adding together two name_mappings:
+        assert res.json['rewritten_dreamcoder'] == stitch_core.stitch_to_dreamcoder(res.rewritten, stitch_core.name_mapping_dreamcoder(j) + stitch_core.name_mapping_stitch(res.json))
 
         print(f"Found {len(res.abstractions)} abstractions for a compression of {res.json['compression_ratio']:.2f}")
 
-        # ensure rewriting with eta long also does the same
-        # importantly pass in **kwargs here too!
+        # ensure rewriting with eta long also does the same: importantly pass in **kwargs here too or it
+        # won't be in eta long form. rewrite() does an extremely fast variant of compressive search itself internally
+        # so it takes all the same arguments as compress()
         rw = stitch_core.rewrite(abstractions=res.abstractions, **kwargs)
 
         assert rw.rewritten == res.rewritten
-        assert res.json['rewritten_dreamcoder'] == stitch_core.stitch_to_dreamcoder(rw.rewritten, name_mapping)
+
+        print(rw.json["rewritten_dreamcoder"])
+
+        # unfortunately rw.json["rewritten_dreamcoder"] is currently not supported, but you can get the same thing
+        # by passing in the name mapping yourself:
+        assert res.json['rewritten_dreamcoder'] == stitch_core.stitch_to_dreamcoder(rw.rewritten, stitch_core.name_mapping_dreamcoder(j) + stitch_core.name_mapping_stitch(res.json))
 
         # create a new grammar object
         j2 = deepcopy(j)

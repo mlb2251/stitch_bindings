@@ -1,4 +1,4 @@
-from stitch_core import compress, rewrite, StitchException, from_dreamcoder, Abstraction
+from stitch_core import compress, rewrite, StitchException, from_dreamcoder, Abstraction, name_mapping_stitch, stitch_to_dreamcoder
 import json
 
 # simple test
@@ -9,8 +9,9 @@ assert res.abstractions[0].body == '(#0 #0 #0)'
 
 # rewriting test
 programs_to_rewrite = ["(c c c)", "(d d d)"]
-assert rewrite(programs_to_rewrite, res.abstractions).rewritten == ['(fn_0 c)', '(fn_0 d)']
-assert rewrite(programs_to_rewrite, res.abstractions, rewritten_dreamcoder=True).json["rewritten_dreamcoder"] == ['(#(lambda ($0 $0 $0)) c)', '(#(lambda ($0 $0 $0)) d)']
+rw = rewrite(programs_to_rewrite, res.abstractions)
+assert rw.rewritten == ['(fn_0 c)', '(fn_0 d)']
+assert stitch_to_dreamcoder(rw.rewritten, name_mapping_stitch(res.json)) == ['(#(lambda ($0 $0 $0)) c)', '(#(lambda ($0 $0 $0)) d)']
 
 # example from Overview section of the Stitch paper (https://arxiv.org/abs/2211.16605)
 programs = [
