@@ -73,7 +73,7 @@ for domain in domains:
 
         assert rw.rewritten == res.rewritten
 
-        print(rw.json["rewritten_dreamcoder"])
+        # print(rw.json["rewritten_dreamcoder"])
 
         # unfortunately rw.json["rewritten_dreamcoder"] is currently not supported, but you can get the same thing
         # by passing in the name mapping yourself:
