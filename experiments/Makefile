@@ -15,6 +15,9 @@ clean-plots:
 claim-1: compression_benchmark clean-plots
 	${PYTHON} run.py claim-1 compression_benchmark/benches
 
+claim-1-install:
+	${PYTHON} -m pip install -r run_requirements.txt
+
 compression_benchmark:
 	git clone -b popl23_camera_ready https://github.com/mlb2251/compression_benchmark.git compression_benchmark
 
@@ -27,6 +30,9 @@ eta-long: dreamcoder compression_benchmark
 dreamcoder:
 	git clone https://github.com/CatherineWong/laps_dreamcoder.git -b laps --depth 1 dreamcoder
 
+dreamcoder-install:
+	cd dreamcoder && make setup-ocaml && make
+	${PYTHON} -m pip install -r dreamcoder_requirements.txt
 
 clean-dreamcoder:
 	rm -rf dreamcoder

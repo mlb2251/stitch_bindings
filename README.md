@@ -21,6 +21,8 @@ make PYTHON=python3.10
 
 Note on testing bindings: simply executing `python3 tests/test.py` may fail for strange `PYTHONPATH`-related reasons so use `make test` or `cd tests && python3 test.py` instead.
 
+Note that you must have [Rust](https://www.rust-lang.org/tools/install) installed and, for `make docs`, you must have [Sphinx](https://www.sphinx-doc.org/en/master/usage/installation.html) installed.
+
 ## Publishing the bindings to PyPI
 
 ### Automated method

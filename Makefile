@@ -9,7 +9,7 @@ build:
 	${PYTHON} -m maturin build --release -i ${PYTHON} --universal2
 
 install:
-	${PYTHON} -m pip install .
+	${PYTHON} -m pip install . && ${PYTHON} -m pip install sphinx-rtd-theme
 
 install-x86-64:
         ARCHFLAGS="-arch x86_64" pip install . --compile --no-cache-dir
