@@ -12,10 +12,10 @@ clean-plots:
 	rm -f plots/*
 
 
-claim-1: compression_benchmark clean-plots
+claim-1: run-install compression_benchmark clean-plots
 	${PYTHON} run.py claim-1 compression_benchmark/benches
 
-claim-1-install:
+run-install:
 	${PYTHON} -m pip install -r run_requirements.txt
 
 compression_benchmark:
@@ -45,5 +45,5 @@ clean-bench-dreamcoder:
 
 SEEDS := 3
 
-claim-2:
+claim-2: run-install
 	${PYTHON} run.py claim-2 ${SEEDS}

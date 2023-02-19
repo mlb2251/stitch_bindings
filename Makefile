@@ -43,6 +43,10 @@ claim-2:
 	cd experiments && make claim-2 SEEDS=${SEEDS}
 
 eta-long:
+	cd experiments && make clean-benchmark
+	cd experiments && make compression_benchmark
+	cd experiments && make dreamcoder
+	cd experiments && make dreamcoder-install
 	cd experiments && make eta-long
 
 .PHONY: all build install test docs clean claim-1 claim-2

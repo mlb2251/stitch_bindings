@@ -779,7 +779,7 @@ if __name__ == '__main__':
 
                 eta_long =  "ETA_LONG" in os.environ and os.environ["ETA_LONG"] in ['1','true','True','TRUE']
 
-                compress_kwargs = from_dreamcoder(dc_json, eta_long=eta_long)
+                compress_kwargs = from_dreamcoder(dc_json)
                 max_arity = dc_json['arity']
 
                 dc_processed = load(dc_result / "processed" / bench_name)

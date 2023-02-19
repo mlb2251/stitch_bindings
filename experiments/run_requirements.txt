@@ -1,3 +1,3 @@
 prettytable
 matplotlib
-seaborn
+seaborn>=0.11.0
