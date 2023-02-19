@@ -1,3 +1,7 @@
 [submodule "experiments/pregex"]
 	path = experiments/pregex
 	url = https://github.com/insperatum/pregex
+[submodule "experiments/compression_benchmark"]
+	path = experiments/compression_benchmark
+	url = https://github.com/mlb2251/compression_benchmark.git
+	branch = popl23_camera_ready
