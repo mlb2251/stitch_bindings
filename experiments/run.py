@@ -777,9 +777,7 @@ if __name__ == '__main__':
                 # load the input json for the benchmark
                 dc_json = load(bench_path)
 
-                eta_long =  "ETA_LONG" in os.environ and os.environ["ETA_LONG"] in ['1','true','True','TRUE']
-
-                compress_kwargs = from_dreamcoder(dc_json, eta_long=eta_long)
+                compress_kwargs = from_dreamcoder(dc_json)
                 max_arity = dc_json['arity']
 
                 dc_processed = load(dc_result / "processed" / bench_name)
@@ -788,8 +786,7 @@ if __name__ == '__main__':
 
                 if iterations == 0:
                     print("[it=0]",end="",flush=True)
-                    continue
-
+                    continue                    
 
 
                 compress_kwargs.update(dict(
@@ -797,6 +794,12 @@ if __name__ == '__main__':
                     iterations=iterations,
                     dreamcoder_comparison=True,
                 ))
+
+                if "ETA_LONG" in os.environ and os.environ["ETA_LONG"] in ['1','true','True','TRUE']:
+                    compress_kwargs.update(dict(
+                        eta_long=True,
+                        utility_by_rewrite=True
+                    ))
 
                 include_env_stitch_kwargs(compress_kwargs)
 

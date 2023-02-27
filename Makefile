@@ -26,6 +26,7 @@ docs: kwargs
 
 clean:
 	cargo clean
+	cd experiments && make clean
 
 kwargs:
 	cd scripts && ${PYTHON} gen_kwargs_listing.py > ../docs/source/generated_kwargs_table.rst
