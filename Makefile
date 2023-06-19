@@ -2,11 +2,26 @@
 PYTHON := python3
 SEEDS := 3
 
+ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
+    detected_OS := Windows
+else
+    detected_OS := $(shell uname)  # same as "uname -s"
+endif
+
+
 all: build install test docs
 
 build:
 	${PYTHON} -m pip install maturin --upgrade
-	${PYTHON} -m maturin build --release -i ${PYTHON} --target universal2-apple-darwin
+	${PYTHON} -m pip install sphinx-rtd-theme
+	if [ $(detected_OS) = Darwin ]; then\
+		rustup target add aarch64-apple-darwin;\
+		rustup target add x86_64-apple-darwin;\
+		${PYTHON} -m maturin build --release -i ${PYTHON} --target universal2-apple-darwin;\
+	else\
+		${PYTHON} -m maturin build --release -i ${PYTHON};\
+	fi
+
 
 install:
 	${PYTHON} -m pip install .
@@ -14,9 +29,7 @@ install:
 install-x86-64:
         ARCHFLAGS="-arch x86_64" pip install . --compile --no-cache-dir
 
-osx-setup:
-	rustup target add aarch64-apple-darwin
-	rustup target add x86_64-apple-darwin
+
 
 test:
 	cd tests && ${PYTHON} test.py
@@ -46,4 +59,4 @@ claim-2:
 eta-long:
 	cd experiments && make eta-long
 
-.PHONY: all build install test docs clean claim-1 claim-2
+.PHONY: all build build_osx install test docs clean claim-1 claim-2
