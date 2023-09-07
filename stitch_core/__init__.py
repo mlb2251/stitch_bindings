@@ -6,6 +6,11 @@ import json
 class StitchException(Exception):
     """Raised when the Stitch's Rust backend panics"""
     pass
+class ParseError(Exception):
+    pass
+
+class InvalidAbstractionException(Exception):
+    pass
 
 class Abstraction:
     """
@@ -21,10 +26,29 @@ class Abstraction:
     def __init__(self, name: str, body: str, arity: int):
         self.name = name
         self.body = body
+        assert not body.startswith("#"), "This abstractions is in dreamcoder format – use Abstraction.from_dreamcoder() instead"
         self.arity = arity
+    
     def __repr__(self):
         args = ','.join([f'#{i}' for i in range(self.arity)])
         return f"{self.name}({args}) := {self.body}"
+
+    @staticmethod
+    def from_dreamcoder(name:str, dreamcoder_abstraction: str, name_mapping: List[Tuple[str,str]]):
+        """
+        Takes a dreamcoder-style abstraction like "#(lambda (foo $0 (#(lambda bar $0))))" and returns an Abstraction object.
+        """
+
+        # We can start by running the dreamcoder_to_stitch() utility for programs, which will replace any
+        # dreamcoder-style abstraction invocations like #(...) with fn_0(...) etc, and will also convert all `lambda`s to `lam`s.
+        assert dreamcoder_abstraction.startswith("#")
+        abstraction = dreamcoder_to_stitch(dreamcoder_abstraction[1:], name_mapping)
+
+        sexpr = parse(abstraction)
+        sexpr, num_lambdas = strip_lambdas(sexpr)
+        sexpr = dc_to_stitch_vars(sexpr, 0, num_lambdas)
+        return Abstraction(name, show_sexpr(sexpr), num_lambdas)
+
 
 class CompressionResult:
     """
@@ -308,3 +332,123 @@ def build_arg(name: str, val) -> str:
         else:
             return ""
     return f"{res}={val}"
+
+
+def sexpr_replace(sexpr, old, new):
+    if isinstance(old, str):
+        fn_old = lambda x: x == old
+    else:
+        fn_old = old
+    if isinstance(new, str):
+        fn_new = lambda _: new
+    else:
+        fn_new = new
+    assert callable(fn_old)
+    assert callable(fn_new)
+
+    if fn_old(sexpr):
+        return fn_new(sexpr)
+    else:
+        if isinstance(sexpr, list):
+            return [sexpr_replace(x, fn_old, fn_new) for x in sexpr]
+        else:
+            assert isinstance(sexpr, str)
+            return sexpr
+
+def strip_lambdas(sexpr):
+    num_lambdas = 0
+    while isinstance(sexpr, list) and len(sexpr) > 0 and (sexpr[0] == "lambda" or sexpr[0] == "lam"):
+        assert len(sexpr) == 2, "lambda should only take one argument (the body)"
+        num_lambdas += 1
+        sexpr = sexpr[1]
+    return sexpr, num_lambdas
+
+def dc_to_stitch_vars(sexpr, depth, num_args):
+    if isinstance(sexpr, str):
+        if sexpr.startswith("$"):
+            # this is a de Bruijn index
+            idx = int(sexpr[1:])
+            if idx >= depth:
+                # #(foo (lambda ($0 $1))) -> #(foo (lambda ($0 #0)))
+                shifted = idx - depth
+                # note the larger the $i the higher outside of the abstraction
+                # it points ie to an earlier argument and thus the lower the #j it
+                # corresponds to. As a test case at depth 0 and 2 args, $0 becomes #1
+                new_idx = num_args - shifted - 1 
+                if new_idx < 0:
+                    raise InvalidAbstractionException("abstraction contains free variables")
+                return "#" + str(new_idx)
+        return sexpr
+    else:
+        assert isinstance(sexpr, list)
+        if len(sexpr) > 0 and sexpr[0] in ("lambda", "lam"):
+            return [sexpr[0]] + [dc_to_stitch_vars(e, depth + 1, num_args) for e in sexpr[1:]]
+        else:
+            return [dc_to_stitch_vars(e, depth, num_args) for e in sexpr]
+
+def show_sexpr(sexpr):
+    if isinstance(sexpr, str):
+        return sexpr
+    elif isinstance(sexpr, list):
+        if len(sexpr) != 0 and isinstance(sexpr[0], str) and sexpr[0].startswith("#"):
+            return "#(" + " ".join([show_sexpr(s) for s in sexpr[1:]]) + ")"
+        return "(" + " ".join([show_sexpr(s) for s in sexpr]) + ")"
+
+
+def parse(original_s: str):
+    """
+    Parses a string into an s-expression. Such as
+    "(+ 3 (* 2 4))" -> ["+", "3", ["*", "2", "4"]]
+
+    Note that dreamcoder-style (baz #(foo bar)) get parsed as
+    ["baz" ["#", "foo", "bar"]] i.e. the `#` symbol is moved *into* the list of children as the first item
+    for ease of identifying when a subexpression is a learned abstraction
+    """
+
+    assert original_s.count('#(') == original_s.count('#'), "parser assumes all `#` symbols are followed by a `(` but this is not the case here"
+
+    # add guaranteed parens around whole thing and guaranteed spacing around parens so they parse into their own items
+    s = original_s.replace("#(","(# ").replace("(", " ( ").replace(")", " ) ")
+
+    # `split` will skip all quantities of all forms of whitespace
+    items = s.split()
+    if len(items) == 0:
+        raise ParseError("SExpr parse called on empty (or all whitespace) string")
+    if items[1] == ")":
+        raise ParseError("SExpr starts with a closeparen")
+
+    # this is a single symbol like "foo" or "bar"
+    if len(items) == 1:
+        return items[0]
+
+    i=-1
+    expr_stack = []
+    # num_open_parens = Int[]
+
+    while True:
+        i += 1
+
+        if i > len(items)-1:
+            raise ParseError(f"unbalanced parens: unclosed parens in {original_s}")
+
+        if items[i] == "(":
+            expr_stack.append([])
+        elif items[i] == ")":
+            # end an expression: pop the last SExpr off of expr_stack and add it to the SExpr at one level before that
+
+            if len(expr_stack) == 1:
+                if i != len(items)-1:
+                    raise ParseError(f"trailing characters after final closeparen in {original_s}")
+                break
+
+            last = expr_stack.pop()
+            expr_stack[-1].append(last)
+        else:
+            # any other item like "foo" or "+" is a symbol
+            expr_stack[-1].append(items[i])
+
+    assert len(expr_stack) != 0, "unreachable - should have been caught by the first check for string emptiness"
+    if len(expr_stack) != 1:
+        raise ParseError(f"unbalanced parens: not enough close parens in {original_s}")
+
+    return expr_stack.pop()
