@@ -952,7 +952,16 @@ if __name__ == '__main__':
             'wheels': 'vehicles',
             'house': 'houses',
         }
-        domains = ['nuts-bolts', 'dials', 'furniture', 'wheels'] #+ ['bridge', 'city', 'castle', 'house']
+        
+        minimal = 'minimal' in sys.argv
+        tiny = 'tiny' in sys.argv
+
+        if tiny:
+            domains = ['nuts-bolts', 'dials', 'furniture', 'wheels']
+        elif minimal:
+            domains = ['nuts-bolts', 'dials', 'furniture', 'wheels', 'bridge', 'house']
+        else:
+            domains = ['nuts-bolts', 'dials', 'furniture', 'wheels', 'bridge', 'city', 'castle', 'house']
 
         table = PrettyTable(['Domain', 'Training set C.R.', 'Test set C.R.', 'Runtime (s)', 'Peak mem. usage (MB)'])
 
@@ -990,7 +999,9 @@ if __name__ == '__main__':
             print("")
         print(table)
 
-
+        with open("plots/claim-2.txt",'w') as f:
+            f.write(str(table))
+            print("wrote to plots/claim-2.txt")
 
     elif mode == 'graph_all':
         """

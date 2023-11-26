@@ -56,7 +56,22 @@ claim-1:
 claim-2:
 	cd experiments && make claim-2 SEEDS=${SEEDS}
 
+claim-2-minimal:
+	cd experiments && make claim-2-minimal SEEDS=${SEEDS}
+
+claim-2-tiny:
+	cd experiments && make claim-2-tiny SEEDS=${SEEDS}
+
+
+benchmark: all clean claim-1 claim-2
+benchmark-minimal: all clean claim-1 claim-2-minimal
+benchmark-tiny: all clean claim-1 claim-2-tiny
+
+plots-old:
+	rm -rf experiments/plots_old
+	cp -r experiments/plots experiments/plots_old
+
 eta-long:
 	cd experiments && make eta-long
 
-.PHONY: all build build_osx install test docs clean claim-1 claim-2
+.PHONY: all build build_osx install test docs clean claim-1 claim-2 benchmark plots-old eta-long

@@ -77,3 +77,4 @@ docs/_build/
 .python-version
 docs/source/generated/
 experiments/plots/
+experiments/plots_old/

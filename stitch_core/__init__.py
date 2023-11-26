@@ -47,7 +47,9 @@ class Abstraction:
         sexpr = parse(abstraction)
         sexpr, num_lambdas = strip_lambdas(sexpr)
         sexpr = dc_to_stitch_vars(sexpr, 0, num_lambdas)
-        return Abstraction(name, show_sexpr(sexpr), num_lambdas)
+        body = show_sexpr(sexpr)
+        assert '#' not in body
+        return Abstraction(name, body, num_lambdas)
 
 
 class CompressionResult:

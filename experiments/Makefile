@@ -41,3 +41,7 @@ SEEDS := 3
 
 claim-2:
 	${PYTHON} run.py claim-2 ${SEEDS}
+claim-2-minimal:
+	${PYTHON} run.py claim-2 ${SEEDS} minimal
+claim-2-tiny:
+	${PYTHON} run.py claim-2 ${SEEDS} tiny

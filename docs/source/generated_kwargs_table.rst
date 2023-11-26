@@ -62,6 +62,11 @@
           - [currently not used] Number of invention candidates compression_step should return in a
             *single* step. Note that these will be the top n optimal candidates modulo subsumption
             pruning (and the top-1 is guaranteed to be globally optimal) [default: 1]
+        * - ``no_curried_bodies``
+          - Forbid abstraction bodies rooted to the left of an app (see also no_curried_metavars and
+            eta_long)
+        * - ``no_curried_metavars``
+          - Forbid metavariables to the left of an app
         * - ``no_mismatch_check``
           - Disables the safety check for the utility being correct; you only want to do this if you
             truly dont mind unsoundness for a minute
@@ -119,6 +124,9 @@
         * - ``silent``
           - Disables all prinouts except in the case of a panic. See also ``quiet`` to just silence
             internal printouts during each compression step In Python this defaults to True
+        * - ``structure_penalty <val>``
+          - DreamCoder style structure penalty - must be positive. Overall utility is this
+            difference in corpus size minus structure_penalty * abstraction_size [default: 1.0]
         * - ``threads <val>``
           - Number of threads to use for compression (no parallelism if set to 1) [default: 1]
         * - ``utility_by_rewrite``
