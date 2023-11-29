@@ -1,5 +1,6 @@
 from stitch_core import compress, rewrite, StitchException, from_dreamcoder, Abstraction, name_mapping_stitch, stitch_to_dreamcoder
 import json
+import math
 
 # simple test
 programs = ["(a a a)", "(b b b)"]
@@ -67,5 +68,23 @@ try:
 except TypeError as e:
     # print(e)
     pass
+
+# 1x (default) weighting vs 2x weighting vs weighting the "g" programs more
+programs = ["(f a a)", "(f b b)", "(f c c)", "(g d d)", "(g e e)"]
+res = compress(programs, iterations=1)
+res2x = compress(programs, iterations=1, weights=[2. for _ in programs])
+res_uneven = compress(programs, iterations=1, weights=[1., 1., 1., 2., 2.])
+
+assert res.json["original_cost"] *2 == res2x.json["original_cost"]
+assert res.json["final_cost"] *2 == res2x.json["final_cost"]
+assert res.abstractions[0].body == res2x.abstractions[0].body == "(f #0 #0)"
+assert res_uneven.abstractions[0].body == "(g #0 #0)"
+
+# make sure compression ratio is as expected
+assert math.fabs(res_uneven.json["original_cost"]/res_uneven.json["final_cost"] - res_uneven.json["compression_ratio"]) < 0.00001
+
+# assert res.rewritten == ['(fn_0 a)', '(fn_0 b)']
+# assert res.abstractions[0].body == '(#0 #0 #0)'
+
 
 print("Passed all tests")

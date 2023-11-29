@@ -7,13 +7,16 @@ use clap::Parser;
 #[pyfunction(
     programs,
     tasks,
+    weights,
     name_mapping,
+    panic_loud,
     args
 )]
 fn compress_backend(
     py: Python,
     programs: Vec<String>,
     tasks: Option<Vec<String>>,
+    weights: Option<Vec<f32>>,
     name_mapping: Option<Vec<(String,String)>>,
     panic_loud: bool,
     args: String,
@@ -31,7 +34,7 @@ fn compress_backend(
     
     // release the GIL and call compression
     let (_step_results, json_res) = py.allow_threads(||
-        multistep_compression(&programs, tasks, name_mapping, None, &cfg)
+        multistep_compression(&programs, tasks, weights, name_mapping, None, &cfg)
     );
 
     // return as something you could json.loads(out) from in python
@@ -42,6 +45,7 @@ fn compress_backend(
 #[pyfunction(
     programs,
     abstractions,
+    panic_loud,
     args
 )]
 fn rewrite_backend(

@@ -289,6 +289,7 @@ def compress(
     """
 
     tasks = kwargs.pop("tasks", None)
+    weights = kwargs.pop("weights", None)
     name_mapping = kwargs.pop("name_mapping", None)
     panic_loud = kwargs.pop('panic_loud',False)
 
@@ -305,6 +306,7 @@ def compress(
         res = compress_backend(
             programs,
             tasks,
+            weights,
             name_mapping,
             panic_loud,
             args)
