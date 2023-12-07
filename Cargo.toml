@@ -1,6 +1,6 @@
 [package]
 name = "stitch_bindings"
-version = "0.1.24"
+version = "0.1.25"
 edition = "2021"
 
 [lib]
@@ -12,7 +12,7 @@ name = "stitch_core"
 
 [dependencies]
 # stitch_core = { path = "../stitch"}
-stitch_core = { git = "https://github.com/mlb2251/stitch", rev = "323da8c"}
+stitch_core = { git = "https://github.com/mlb2251/stitch", rev = "aa0fa84"}
 pyo3 = {version = "0.17.3", features = ["extension-module"] }
 clap = { version = "3.1.0" }
 
