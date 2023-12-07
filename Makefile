@@ -39,6 +39,7 @@ docs: kwargs
 
 clean:
 	cargo clean
+	rm -f experiments/plots/*
 	cd experiments && make clean
 
 kwargs:
@@ -51,15 +52,19 @@ publish-test:
 	${PYTHON} -m pip install -i https://test.pypi.org/simple/ stitch-core
 
 claim-1:
+	cp Cargo.toml experiments/plots/claim1-Cargo.toml
 	cd experiments && make claim-1
 
 claim-2:
+	cp Cargo.toml experiments/plots/claim2-Cargo.toml
 	cd experiments && make claim-2 SEEDS=${SEEDS}
 
 claim-2-minimal:
+	cp Cargo.toml experiments/plots/claim2-Cargo.toml
 	cd experiments && make claim-2-minimal SEEDS=${SEEDS}
 
 claim-2-tiny:
+	cp Cargo.toml experiments/plots/claim2-Cargo.toml
 	cd experiments && make claim-2-tiny SEEDS=${SEEDS}
 
 

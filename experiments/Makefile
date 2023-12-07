@@ -12,7 +12,7 @@ clean-plots:
 	rm -f plots/*
 
 
-claim-1: compression_benchmark clean-plots
+claim-1: compression_benchmark
 	${PYTHON} run.py claim-1 compression_benchmark/benches
 
 compression_benchmark:
