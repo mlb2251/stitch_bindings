@@ -80,10 +80,7 @@ def main():
     for fname in sorted(glob.glob("../data/cogsci/*.json")):
         with open(fname, "r") as f:
             programs = json.load(f)
-        num_arities = [2]
-        num_particles = [10]
         print(run_all_experiments("3819a7d", programs, num_arities, num_particles))
-        break
 
 
 if __name__ == "__main__":
