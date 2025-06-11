@@ -968,6 +968,8 @@ if __name__ == '__main__':
 
         num_repetitions = int(sys.argv[2])
         results = []
+        mean_compression_each = []
+        mean_time_each = []
         for domain in domains:
             print(f"{domain}:",end="",flush=True)
             with open(f'../data/cogsci/{domain}.json', 'rb') as data:
@@ -996,11 +998,17 @@ if __name__ == '__main__':
                 f'{np.mean(runtimes):.2f} +- {np.std(runtimes):.2f}',
                 f'{np.mean(mems):.2f} +- {np.std(mems):.2f}',
             ])
+            mean_compression_each.append(np.mean(test_compressions))
+            mean_time_each.append(np.mean(runtimes))
             print("")
-        print(table)
+
+        to_write = str(table) + "\n"
+        to_write += f"Geometric mean of mean CRs: {np.exp(np.mean(np.log(mean_compression_each))):.6f}\n"
+        to_write += f"Geometric mean of mean runtimes: {np.exp(np.mean(np.log(mean_time_each))):.6f}"
+        print(to_write)
 
         with open("plots/claim-2.txt",'w') as f:
-            f.write(str(table))
+            f.write(to_write)
             print("wrote to plots/claim-2.txt")
 
     elif mode == 'graph_all':
