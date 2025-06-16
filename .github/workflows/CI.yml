@@ -22,7 +22,7 @@ jobs:
     - name: Upload wheels
       uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-linux-${{ github.run_id }}
         path: dist
 
   windows:
@@ -36,7 +36,7 @@ jobs:
     - name: Upload wheels
       uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-windows-${{ github.run_id }}
         path: dist
 
   sdist:
@@ -50,7 +50,7 @@ jobs:
     - name: Upload wheels
       uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-sdist-${{ github.run_id }}
         path: dist
 
   macos:
@@ -64,7 +64,7 @@ jobs:
     - name: Upload wheels
       uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-macos-${{ github.run_id }}
         path: dist
 
   release:
@@ -75,7 +75,8 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: wheels
+          pattern: wheels-*-${{ github.run_id }}
+          merge-multiple: true
       - name: Publish to PyPI
         uses: PyO3/maturin-action@v1
         env:
