@@ -12,3 +12,5 @@ classifiers = [
 ]
 
 
+[features]
+generate-import-lib = []
