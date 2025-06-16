@@ -51,19 +51,22 @@ publish-test:
 	${PYTHON} -m pip uninstall stitch_core
 	${PYTHON} -m pip install -i https://test.pypi.org/simple/ stitch-core
 
-claim-1:
+folders:
+	mkdir -p experiments/plots
+
+claim-1: folders
 	cp Cargo.toml experiments/plots/claim1-Cargo.toml
 	cd experiments && make claim-1
 
-claim-2:
+claim-2: folders
 	cp Cargo.toml experiments/plots/claim2-Cargo.toml
 	cd experiments && make claim-2 SEEDS=${SEEDS}
 
-claim-2-minimal:
+claim-2-minimal: folders
 	cp Cargo.toml experiments/plots/claim2-Cargo.toml
 	cd experiments && make claim-2-minimal SEEDS=${SEEDS}
 
-claim-2-tiny:
+claim-2-tiny: folders
 	cp Cargo.toml experiments/plots/claim2-Cargo.toml
 	cd experiments && make claim-2-tiny SEEDS=${SEEDS}
 
