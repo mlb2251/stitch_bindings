@@ -16,32 +16,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - run: rustup update stable && rustup default stable
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-          
-      - name: Create and activate virtual environment
-        run: |
-          python -m venv .venv
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            .venv\Scripts\activate
-          else
-            source .venv/bin/activate
-          fi
-          
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install prettytable matplotlib seaborn
-          
-      - name: Create required directories
-        run: |
-          mkdir -p experiments/plots
-          
+      - run: python3 -m pip install prettytable matplotlib seaborn
       - name: build
         run: make build
       - name: install
@@ -53,7 +30,7 @@ jobs:
       - name: claim-2
         run: make claim-2 SEEDS=10
       - name: Upload plots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: plots-${{ matrix.os }}-${{ github.run_id }}
+          name: plots-${{ matrix.os }}
           path: experiments/plots
