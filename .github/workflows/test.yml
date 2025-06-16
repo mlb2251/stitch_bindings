@@ -30,7 +30,7 @@ jobs:
       - name: claim-2
         run: make claim-2 SEEDS=10
       - name: Upload plots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: plots-${{ matrix.os }}
           path: experiments/plots
