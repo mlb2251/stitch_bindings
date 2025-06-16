@@ -2,6 +2,8 @@ import glob
 import json
 import os
 import subprocess
+from sys import argv
+from tempfile import NamedTemporaryFile
 import numpy as np
 import tqdm
 from permacache import permacache
@@ -33,15 +35,18 @@ cache_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
 def run_all_experiments(revision, programs, num_arities, num_particles):
     set_revision(revision)
     # splitting off to ensure that the revision is set before importing stitch
-    output = subprocess.check_output(
-        [
-            "python3",
-            "smc_experiment_direct.py",
-            json.dumps(programs),
-            json.dumps(num_arities),
-            json.dumps(num_particles),
-        ]
-    )
+    with NamedTemporaryFile("w", suffix=".json") as programs_file:
+        json.dump(programs, programs_file)
+        programs_file.close()
+        output = subprocess.check_output(
+            [
+                "python3",
+                "smc_experiment_direct.py",
+                programs_file.name,
+                json.dumps(num_arities),
+                json.dumps(num_particles),
+            ]
+        )
     output = output.decode("utf-8")
     output = json.loads(output)
     return output
@@ -55,8 +60,7 @@ def main():
         with open(fname, "r") as f:
             programs = json.load(f)
         print(fname)
-        print(run_all_experiments("3819a7d", programs, num_arities, num_particles))
-        break
+        print(run_all_experiments(argv[1], programs, num_arities, num_particles))
 
 
 if __name__ == "__main__":

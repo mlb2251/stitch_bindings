@@ -50,10 +50,12 @@ def run_experiment(programs, num_arities, num_particles):
 
 
 def main():
+    with open(argv[1], "r") as f:
+        programs = json.load(f)
     print(
         json.dumps(
             run_experiment(
-                json.loads(argv[1]),
+                programs,
                 json.loads(argv[2]),
                 json.loads(argv[3]),
             )
