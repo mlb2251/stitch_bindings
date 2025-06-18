@@ -35,7 +35,7 @@ cache_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
 def run_all_experiments(revision, programs, num_arities, num_particles):
     set_revision(revision)
     # splitting off to ensure that the revision is set before importing stitch
-    with NamedTemporaryFile("w", suffix=".json") as programs_file:
+    with NamedTemporaryFile("w", suffix=".json", delete=False) as programs_file:
         json.dump(programs, programs_file)
         programs_file.close()
         output = subprocess.check_output(
