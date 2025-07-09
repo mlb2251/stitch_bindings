@@ -46,7 +46,7 @@ jobs:
     - uses: PyO3/maturin-action@v1
       with:
         command: build
-        args: --release -o dist --sdist
+        args: --release -o dist --sdist --find-interpreter
     - name: Upload wheels
       uses: actions/upload-artifact@v4
       with:
