@@ -10,3 +10,7 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
+
+
+[features]
+generate-import-lib = ["pyo3/generate-import-lib"]
