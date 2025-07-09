@@ -20,9 +20,9 @@ jobs:
         command: build
         args: --release -o dist --find-interpreter
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-linux
         path: dist
 
   windows:
@@ -34,9 +34,9 @@ jobs:
         command: build
         args: --release -o dist --find-interpreter
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-windows
         path: dist
 
   sdist:
@@ -48,9 +48,9 @@ jobs:
         command: build
         args: --release -o dist --sdist
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-sdist
         path: dist
 
   macos:
@@ -62,9 +62,9 @@ jobs:
         command: build
         args: --release -o dist --find-interpreter --target universal2-apple-darwin
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-macos
         path: dist
 
   release:
@@ -73,9 +73,9 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published' && startsWith(github.ref, 'refs/tags/v')
     needs: [ macos, windows, linux, sdist ]
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
-          name: wheels
+          name: wheels-*
       - name: Publish to PyPI
         uses: PyO3/maturin-action@v1
         env:
