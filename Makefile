@@ -52,18 +52,22 @@ publish-test:
 	${PYTHON} -m pip install -i https://test.pypi.org/simple/ stitch-core
 
 claim-1:
+	mkdir -p experiments/plots
 	cp Cargo.toml experiments/plots/claim1-Cargo.toml
 	cd experiments && make claim-1
 
 claim-2:
+	mkdir -p experiments/plots
 	cp Cargo.toml experiments/plots/claim2-Cargo.toml
 	cd experiments && make claim-2 SEEDS=${SEEDS}
 
 claim-2-minimal:
+	mkdir -p experiments/plots
 	cp Cargo.toml experiments/plots/claim2-Cargo.toml
 	cd experiments && make claim-2-minimal SEEDS=${SEEDS}
 
 claim-2-tiny:
+	mkdir -p experiments/plots
 	cp Cargo.toml experiments/plots/claim2-Cargo.toml
 	cd experiments && make claim-2-tiny SEEDS=${SEEDS}
 
