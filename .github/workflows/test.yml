@@ -16,7 +16,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: rustup update stable && rustup default stable
       - run: python3 -m pip install prettytable matplotlib seaborn
       - name: build
@@ -30,7 +30,7 @@ jobs:
       - name: claim-2
         run: make claim-2 SEEDS=10
       - name: Upload plots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: plots-${{ matrix.os }}
           path: experiments/plots
