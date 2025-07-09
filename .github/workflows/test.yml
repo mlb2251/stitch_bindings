@@ -36,9 +36,13 @@ jobs:
           source venv/bin/activate
           make test
       - name: claim-1
-        run: make claim-1
+        run: |
+          source venv/bin/activate
+          make claim-1
       - name: claim-2
-        run: make claim-2 SEEDS=10
+        run: |
+          source venv/bin/activate
+          make claim-2 SEEDS=10
       - name: Upload plots
         uses: actions/upload-artifact@v4
         with:
