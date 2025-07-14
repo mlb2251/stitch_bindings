@@ -26,6 +26,9 @@
           - Sets cost for ``#i`` abstraction variables [default: 100]
         * - ``cost_lam <val>``
           - Sets cost for lambdas [default: 1]
+        * - ``cost_prim <val>``
+          - Sets cost for primitives like ``+`` and ``*`` in the form of a dictionary, json encoded
+            [default: {}]
         * - ``cost_prim_default <val>``
           - Sets cost for primitives like ``+`` and ``*`` [default: 100]
         * - ``cost_var <val>``
@@ -47,6 +50,8 @@
         * - ``follow_prune``
           - For use with ``follow``, enables aggressive pruning. Useful for ensuring that it is
             *possible* to find a particular abstraction by guiding the search directly towards it
+        * - ``fused_lambda_tags <val>``
+          - [default: ]
         * - ``hole_choice <val>``
           - Method for choosing hole to expand at each step. Doesn't have a huge effect [default:
             depth-first] [possible values: random, breadth-first, depth-first, max-largest-subset,
@@ -127,12 +132,28 @@
         * - ``structure_penalty <val>``
           - DreamCoder style structure penalty - must be positive. Overall utility is this
             difference in corpus size minus structure_penalty * abstraction_size [default: 1.0]
+        * - ``symvar_prefix <val>``
+          - If set, we will use symvars
         * - ``threads <val>``
           - Number of threads to use for compression (no parallelism if set to 1) [default: 1]
+        * - ``tdfa_json_path <val>``
+          - If set, we will apply the given TDFA to the programs and use this to annotate the
+            programs
+        * - ``tdfa_non_eta_long_states <val>``
+          - States of the TDFA that not in eta-long-form (e.g., (/seq A B C) makes (/seq A) a valid
+            metavariable)
+        * - ``tdfa_root <val>``
+          - The root of the TDFA to use for annotation
+        * - ``tdfa_split <val>``
+          - If set, when present in a symbol, we will take the part before the split as the symbol
         * - ``utility_by_rewrite``
           - Calculate utility exhaustively by performing a full rewrite. Used for debugging when
             cost mismatch exceptions are happening and we need something slow but accurate as a
             temporary solution
+        * - ``valid_metavars <val>``
+          - Metavariable locations that are valid for the TDFA
+        * - ``valid_roots <val>``
+          - Root locations that are valid for the TDFA
         * - ``verbose_best``
           - Prints whenever a new best abstraction is found
         * - ``verbose_rewrite``
