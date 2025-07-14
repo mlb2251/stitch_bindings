@@ -75,7 +75,16 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: wheels-*
+          name: wheels-linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-windows
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-macos
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-sdist
       - name: Publish to PyPI
         uses: PyO3/maturin-action@v1
         env:
