@@ -303,7 +303,6 @@ def process_stitch_inventions(in_file, out_file):
     }
 
 
-
 def usages(fn_name, stitch_programs):
     # we count name + closeparen or name + space so that fn_1 doesnt get counted for things like fn_10
     return sum([p.count(f'{fn_name})') + p.count(f'{fn_name} ') for p in stitch_programs])
@@ -355,7 +354,7 @@ def latest(mode_dir, benches_dir):
     benches = [b for b in benches_dir.iterdir() if b != 'old']
     assert mode_dir in ('dreamcoder','stitch')
     mode_dir = 'stitch' if mode_dir == 'stitch' else 'dc'
-    
+
     res = []
     for benchpath in benches:
         target = benchpath / 'out' / mode_dir
@@ -366,23 +365,17 @@ def latest(mode_dir, benches_dir):
         res.append(runs[-1])
     return res
 
-def claim_2_workload(seed, programs, q: Queue):
-    """
-    Runs a workload, can be run within a multiprocessing process
-    so that getrusage() will return the actual self usage not including the parent
-    (though unclear exactly if this will be the case with fork etc)
-    """
+
+def run_compression(seed, programs, compress_kwargs):
     random.seed(seed)
     random.shuffle(programs)
     split = 200  # Test set size is fixed to 20% of programs
-    train,test = programs[:split], programs[split:]
+    train, test = programs[:split], programs[split:]
 
     # with open('tmp_train.json','w') as f:
     #     json.dump(train,f,indent=4)
     # with open('tmp_test.json','w') as f:
     #     json.dump(test,f,indent=4)
-
-    compress_kwargs = dict(max_arity=3, iterations=10)
 
     include_env_stitch_kwargs(compress_kwargs)
 
@@ -391,23 +384,39 @@ def claim_2_workload(seed, programs, q: Queue):
     rewritten = rewrite(test, res.abstractions, **compress_kwargs)
     runtime = time.time() - tstart
     mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    if sys.platform == 'darwin':
-        mem /= 10**6 # on the M1 mac I tested on, it reports in bytes
-    elif sys.platform == 'linux' or sys.platform == 'linux2':
+    if sys.platform == "darwin":
+        mem /= 10**6  # on the M1 mac I tested on, it reports in bytes
+    elif sys.platform == "linux" or sys.platform == "linux2":
         mem /= 10**3
     else:
-        print(f"WARNING: unsure what rusage memory unit is on {sys.platform}, assuming kb")
+        print(
+            f"WARNING: unsure what rusage memory unit is on {sys.platform}, assuming kb"
+        )
         mem /= 10**3
 
     rewritten_train = rewrite(train, res.abstractions, silent=False, **compress_kwargs)
     assert rewritten_train.rewritten == res.rewritten
 
-    q.put([
-        corpus_size(train,[]) / corpus_size(res.rewritten,[]), # we dont include abstraction size in these experiments
-        corpus_size(test,[]) / corpus_size(rewritten.rewritten,[]),
+    result = [
+        corpus_size(train, [])
+        / corpus_size(
+            res.rewritten, []
+        ),  # we dont include abstraction size in these experiments
+        corpus_size(test, []) / corpus_size(rewritten.rewritten, []),
         runtime,
-        mem
-    ])
+        mem,
+    ]
+    return result
+
+
+def claim_2_workload(seed, programs, q: Queue):
+    """
+    Runs a workload, can be run within a multiprocessing process
+    so that getrusage() will return the actual self usage not including the parent
+    (though unclear exactly if this will be the case with fork etc)
+    """
+
+    q.put(run_compression(seed, programs, dict(max_arity=3, iterations=10)))
 
 def claim_1_workload(compress_kwargs, q: Queue):
 
@@ -968,6 +977,8 @@ if __name__ == '__main__':
 
         num_repetitions = int(sys.argv[2])
         results = []
+        mean_compression_each = []
+        mean_time_each = []
         for domain in domains:
             print(f"{domain}:",end="",flush=True)
             with open(f'../data/cogsci/{domain}.json', 'rb') as data:
@@ -996,11 +1007,17 @@ if __name__ == '__main__':
                 f'{np.mean(runtimes):.2f} +- {np.std(runtimes):.2f}',
                 f'{np.mean(mems):.2f} +- {np.std(mems):.2f}',
             ])
+            mean_compression_each.append(np.mean(test_compressions))
+            mean_time_each.append(np.mean(runtimes))
             print("")
-        print(table)
+
+        to_write = str(table) + "\n"
+        to_write += f"Geometric mean of mean CRs: {np.exp(np.mean(np.log(mean_compression_each))):.6f}\n"
+        to_write += f"Geometric mean of mean runtimes: {np.exp(np.mean(np.log(mean_time_each))):.6f}"
+        print(to_write)
 
         with open("plots/claim-2.txt",'w') as f:
-            f.write(str(table))
+            f.write(to_write)
             print("wrote to plots/claim-2.txt")
 
     elif mode == 'graph_all':
@@ -1262,12 +1279,3 @@ if __name__ == '__main__':
             print("Avg",total/count)
     else:
         assert False, f"mode not recognized: {mode}"
-
-
-
-
-
-
-
-    
-
