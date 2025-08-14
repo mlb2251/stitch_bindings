@@ -13,58 +13,58 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: PyO3/maturin-action@v1
       with:
         manylinux: auto
         command: build
         args: --release -o dist --find-interpreter
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-linux
         path: dist
 
   windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: PyO3/maturin-action@v1
       with:
         command: build
-        args: --release -o dist --find-interpreter
+        args: --release -o dist  --interpreter python3.12
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-windows
         path: dist
 
   sdist:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: PyO3/maturin-action@v1
       with:
         command: build
-        args: --release -o dist --sdist
+        args: --release -o dist --sdist --interpreter python3.12
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-sdist
         path: dist
 
   macos:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: PyO3/maturin-action@v1
       with:
         command: build
         args: --release -o dist --find-interpreter --target universal2-apple-darwin
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: wheels-macos
         path: dist
 
   release:
@@ -73,9 +73,18 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published' && startsWith(github.ref, 'refs/tags/v')
     needs: [ macos, windows, linux, sdist ]
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
-          name: wheels
+          name: wheels-linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-windows
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-macos
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-sdist
       - name: Publish to PyPI
         uses: PyO3/maturin-action@v1
         env:

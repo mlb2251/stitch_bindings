@@ -23,11 +23,12 @@ class Abstraction:
     :param arity: the arity of the abstraction, like 2
     :type arity: int
     """
-    def __init__(self, name: str, body: str, arity: int):
+    def __init__(self, name: str, body: str, arity: int, tdfa_annotation: Union[str,None] = None):
         self.name = name
         self.body = body
         assert not body.startswith("#"), "This abstractions is in dreamcoder format – use Abstraction.from_dreamcoder() instead"
         self.arity = arity
+        self.tdfa_annotation = tdfa_annotation
     
     def __repr__(self):
         args = ','.join([f'#{i}' for i in range(self.arity)])
@@ -64,7 +65,7 @@ class CompressionResult:
     :type json: Dict[str,Any]
     """
     def __init__(self, json: Dict[str,Any]):
-        self.abstractions: List[Abstraction] = [Abstraction(body=abs["body"], name=abs["name"], arity=abs["arity"]) for abs in json["abstractions"]]
+        self.abstractions: List[Abstraction] = [Abstraction(body=abs["body"], name=abs["name"], arity=abs["arity"], tdfa_annotation=abs["tdfa_annotation"]) for abs in json["abstractions"]]
         self.rewritten: List[str] = json['rewritten']
         self.json = json
 
