@@ -23,13 +23,14 @@ class Abstraction:
     :param arity: the arity of the abstraction, like 2
     :type arity: int
     """
-    def __init__(self, name: str, body: str, arity: int, tdfa_annotation: Union[str,None] = None):
+    def __init__(self, name: str, body: str, arity: int, tdfa_annotation: Union[str,None] = None, variable_types: Union[List[str],None] = None):
         self.name = name
         self.body = body
         assert not body.startswith("#"), "This abstractions is in dreamcoder format – use Abstraction.from_dreamcoder() instead"
         self.arity = arity
         self.tdfa_annotation = tdfa_annotation
-    
+        self.variable_types = variable_types
+
     def __repr__(self):
         args = ','.join([f'#{i}' for i in range(self.arity)])
         return f"{self.name}({args}) := {self.body}"
@@ -320,7 +321,7 @@ def compress(
     res = json.loads(res)
     
     return CompressionResult(res)
-    
+
 
 def build_arg(name: str, val) -> str:
     """
