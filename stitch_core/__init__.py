@@ -50,6 +50,7 @@ class Abstraction:
         sexpr, num_lambdas = strip_lambdas(sexpr)
         sexpr = dc_to_stitch_vars(sexpr, 0, num_lambdas)
         body = show_sexpr(sexpr)
+        variable_types = abstraction["variable_types"]
         assert '#' not in body
         return Abstraction(name, body, num_lambdas)
 
@@ -66,7 +67,7 @@ class CompressionResult:
     :type json: Dict[str,Any]
     """
     def __init__(self, json: Dict[str,Any]):
-        self.abstractions: List[Abstraction] = [Abstraction(body=abs["body"], name=abs["name"], arity=abs["arity"], tdfa_annotation=abs["tdfa_annotation"]) for abs in json["abstractions"]]
+        self.abstractions: List[Abstraction] = [Abstraction(body=abs["body"], name=abs["name"], arity=abs["arity"], tdfa_annotation=abs["tdfa_annotation"], variable_types=abs["variable_types"]) for abs in json["abstractions"]]
         self.rewritten: List[str] = json['rewritten']
         self.json = json
 
