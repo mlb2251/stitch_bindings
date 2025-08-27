@@ -32,7 +32,7 @@ install-x86-64:
 
 
 test:
-	${PYTHON} -m pip install pytest && ${PYTHON} -m pytest tests
+	${PYTHON} -m pip install pytest && PYTHONPATH=. ${PYTHON} -m pytest tests
 
 docs: kwargs
 	cd docs && make html
