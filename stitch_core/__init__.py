@@ -23,13 +23,14 @@ class Abstraction:
     :param arity: the arity of the abstraction, like 2
     :type arity: int
     """
-    def __init__(self, name: str, body: str, arity: int, tdfa_annotation: Union[str,None] = None):
+    def __init__(self, name: str, body: str, arity: int, tdfa_annotation: Union[str,None] = None, variable_types: Union[List[str],None] = None):
         self.name = name
         self.body = body
         assert not body.startswith("#"), "This abstractions is in dreamcoder format – use Abstraction.from_dreamcoder() instead"
         self.arity = arity
         self.tdfa_annotation = tdfa_annotation
-    
+        self.variable_types = variable_types
+
     def __repr__(self):
         args = ','.join([f'#{i}' for i in range(self.arity)])
         return f"{self.name}({args}) := {self.body}"
@@ -49,6 +50,7 @@ class Abstraction:
         sexpr, num_lambdas = strip_lambdas(sexpr)
         sexpr = dc_to_stitch_vars(sexpr, 0, num_lambdas)
         body = show_sexpr(sexpr)
+        variable_types = abstraction["variable_types"]
         assert '#' not in body
         return Abstraction(name, body, num_lambdas)
 
@@ -65,7 +67,7 @@ class CompressionResult:
     :type json: Dict[str,Any]
     """
     def __init__(self, json: Dict[str,Any]):
-        self.abstractions: List[Abstraction] = [Abstraction(body=abs["body"], name=abs["name"], arity=abs["arity"], tdfa_annotation=abs["tdfa_annotation"]) for abs in json["abstractions"]]
+        self.abstractions: List[Abstraction] = [Abstraction(body=abs["body"], name=abs["name"], arity=abs["arity"], tdfa_annotation=abs["tdfa_annotation"], variable_types=abs["variable_types"]) for abs in json["abstractions"]]
         self.rewritten: List[str] = json['rewritten']
         self.json = json
 
@@ -320,7 +322,7 @@ def compress(
     res = json.loads(res)
     
     return CompressionResult(res)
-    
+
 
 def build_arg(name: str, val) -> str:
     """

@@ -71,10 +71,17 @@ fn rewrite_backend(
     let abstractions = abstractions.iter().map(|a| {
         let mut set = ExprSet::empty(Order::ChildFirst, false, false);
         let idx = set.parse_extend(&a.getattr("body")?.extract::<String>()?).unwrap();
+        let arity =  a.getattr("arity")?.extract::<usize>()?;
+        let variable_types = a.getattr("variable_types")?.extract::<Option<Vec<String>>>()?;
+        let variable_types = match variable_types {
+            Some(types) => types.into_iter().map(|s| s.parse().unwrap()).collect(),
+            None => vec![VariableType::Metavar; arity],
+        };
         Ok(Invention {
             body: ExprOwned::new(set,idx),
-            arity: a.getattr("arity")?.extract::<usize>()?,
-            name: a.getattr("name")?.extract::<String>()?
+            arity,
+            name: a.getattr("name")?.extract::<String>()?,
+            variable_types,
         })
     }
     ).collect::<PyResult<Vec<_>>>()?;
