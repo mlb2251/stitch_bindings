@@ -19,7 +19,7 @@ which install the bindings for `python3` by default. To use a specific interpret
 make PYTHON=python3.10
 ```
 
-Note on testing bindings: simply executing `python3 tests/test.py` may fail for strange `PYTHONPATH`-related reasons so use `make test` or `cd tests && python3 test.py` instead.
+Run `make test` or `pytest tests`.
 
 ## Publishing the bindings to PyPI
 

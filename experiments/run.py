@@ -395,7 +395,10 @@ def run_compression(seed, programs, compress_kwargs):
         mem /= 10**3
 
     rewritten_train = rewrite(train, res.abstractions, silent=False, **compress_kwargs)
-    assert rewritten_train.rewritten == res.rewritten
+    if rewritten_train.rewritten != res.rewritten:
+        print(rewritten_train.rewritten, file=sys.stderr)
+        print(res.rewritten, file=sys.stderr)
+        raise ValueError("rewritten train does not match res.rewritten, something is wrong")
 
     result = [
         corpus_size(train, [])
