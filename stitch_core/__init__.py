@@ -219,7 +219,7 @@ def rewrite(
     :type programs: List[str]
     :param abstractions: A list of Abstraction objects to rewrite with.
     :type abstractions: List[Abstraction]
-    :param \**kwargs: Additional arguments to pass to the Rust backend. Only the following cost-related arguments from :ref:`compress_kwargs` can be used: ``cost_app``, ``cost_ivar``, ``cost_lam``, ``cost_prim_default``, and ``cost_var``.
+    :param \\**kwargs: Additional arguments to pass to the Rust backend. Only the following cost-related arguments from :ref:`compress_kwargs` can be used: ``cost_app``, ``cost_ivar``, ``cost_lam``, ``cost_prim_default``, and ``cost_var``.
     :raises StitchException: If the Rust backend panics.
     :raises TypeError: If the wrong types are provided for arguments.
     :return: A RewriteResult containing the list of rewritten programs and other relevant information
@@ -284,7 +284,7 @@ def compress(
     :type threads: int
     :param silent: Whether to print progress to stdout.
     :type silent: bool
-    :param \**kwargs: Additional arguments to pass to the Rust backend. See :ref:`compress_kwargs` for a full listing.
+    :param \\**kwargs: Additional arguments to pass to the Rust backend. See :ref:`compress_kwargs` for a full listing.
     :raises StitchException: If the Rust backend panics.
     :raises TypeError: If the wrong types are provided for arguments.
     :return: A CompressionResult object containing the learned abstractions, rewritten programs, and other details from the run.
